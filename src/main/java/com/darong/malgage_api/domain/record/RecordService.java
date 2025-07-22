@@ -1,14 +1,11 @@
-// 경로: com.darong.malgage_api.domain.record.service
-package com.darong.malgage_api.domain.record.service;
+package com.darong.malgage_api.domain.record;
 
-import com.darong.malgage_api.domain.record.Record;
 import com.darong.malgage_api.domain.record.dto.RecordRequestDto;
 import com.darong.malgage_api.domain.record.dto.RecordResponseDto;
-import com.darong.malgage_api.domain.record.repository.RecordRepository;
-import com.darong.malgage_api.domain.category.Category;
-import com.darong.malgage_api.domain.category.repository.CategoryRepository;
-import com.darong.malgage_api.domain.emotion.Emotion;
-import com.darong.malgage_api.domain.emotion.repository.EmotionRepository;
+import com.darong.malgage_api.domain.category.UserCategory;
+import com.darong.malgage_api.domain.category.repository.UserCategoryRepository;
+import com.darong.malgage_api.domain.emotion.UserEmotion;
+import com.darong.malgage_api.domain.emotion.repository.UserEmotionRepository;
 import com.darong.malgage_api.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,14 +20,17 @@ import java.util.stream.Collectors;
 public class RecordService {
 
     private final RecordRepository recordRepository;
-    private final CategoryRepository categoryRepository;
-    private final EmotionRepository emotionRepository;
+    private final UserCategoryRepository userCategoryRepository;
+    private final UserEmotionRepository userEmotionRepository;
 
     public RecordResponseDto create(RecordRequestDto request, User user) {
-        Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
-        Emotion emotion = emotionRepository.findById(request.getEmotionId())
-                .orElseThrow(() -> new IllegalArgumentException("Emotion not found"));
+        UserCategory category = userCategoryRepository.findById(request.getCategoryId())
+                .filter(c -> c.getUser().equals(user) && c.isEnabled())
+                .orElseThrow(() -> new IllegalArgumentException("사용자 카테고리를 찾을 수 없습니다."));
+
+        UserEmotion emotion = userEmotionRepository.findById(request.getEmotionId())
+                .filter(e -> e.getUser().equals(user) && e.isEnabled())
+                .orElseThrow(() -> new IllegalArgumentException("사용자 감정을 찾을 수 없습니다."));
 
         Record record = Record.create(
                 request.getAmount(),
@@ -55,14 +55,17 @@ public class RecordService {
         return RecordResponseDto.from(record);
     }
 
-    public RecordResponseDto update(Long id, RecordRequestDto request) {
+    public RecordResponseDto update(Long id, RecordRequestDto request, User user) {
         Record record = recordRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Record not found"));
 
-        Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
-        Emotion emotion = emotionRepository.findById(request.getEmotionId())
-                .orElseThrow(() -> new IllegalArgumentException("Emotion not found"));
+        UserCategory category = userCategoryRepository.findById(request.getCategoryId())
+                .filter(c -> c.getUser().equals(user) && c.isEnabled())
+                .orElseThrow(() -> new IllegalArgumentException("사용자 카테고리를 찾을 수 없습니다."));
+
+        UserEmotion emotion = userEmotionRepository.findById(request.getEmotionId())
+                .filter(e -> e.getUser().equals(user) && e.isEnabled())
+                .orElseThrow(() -> new IllegalArgumentException("사용자 감정을 찾을 수 없습니다."));
 
         record.update(
                 request.getAmount(),
