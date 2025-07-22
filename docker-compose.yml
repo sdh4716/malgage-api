@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: malgage-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpw
+      MYSQL_DATABASE: malgage_local
+      MYSQL_USER: malgage_user
+      MYSQL_PASSWORD: malgage_pw
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - malgage-network
+
+volumes:
+  mysql-data:
+
+networks:
+  malgage-network:

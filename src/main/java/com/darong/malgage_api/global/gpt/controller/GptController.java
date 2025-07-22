@@ -1,4 +1,4 @@
-package com.darong.malgage_api.global.gpt;
+package com.darong.malgage_api.global.gpt.controller;
 
 import com.darong.malgage_api.global.gpt.dto.AnalyzeRequest;
 import com.darong.malgage_api.global.gpt.dto.MultipleRecordAnalysisResponse;

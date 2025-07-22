@@ -1,7 +1,7 @@
-package com.darong.malgage_api.domain.category.repository;
+package com.darong.malgage_api.domain.emotion.repository;
 
-import com.darong.malgage_api.domain.record.Record;
+import com.darong.malgage_api.domain.emotion.Emotion;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CategoryRepository extends JpaRepository<Record, Long> {
+public interface EmotionRepository extends JpaRepository<Emotion, Long> {
 }

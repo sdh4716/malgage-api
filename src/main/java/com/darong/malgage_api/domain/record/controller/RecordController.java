@@ -1,89 +1,61 @@
-// 경로: com.darong.malgage_api.domain.record.service
-package com.darong.malgage_api.domain.record.service;
+// 경로: com.darong.malgage_api.domain.record.controller
+package com.darong.malgage_api.domain.record.controller;
 
-import com.darong.malgage_api.domain.record.Record;
 import com.darong.malgage_api.domain.record.dto.RecordRequestDto;
 import com.darong.malgage_api.domain.record.dto.RecordResponseDto;
-import com.darong.malgage_api.domain.record.repository.RecordRepository;
-import com.darong.malgage_api.domain.category.Category;
-import com.darong.malgage_api.domain.emotion.Emotion;
-import com.darong.malgage_api.domain.record.repository.CategoryRepository;
-import com.darong.malgage_api.domain.record.repository.EmotionRepository;
+import com.darong.malgage_api.domain.record.service.RecordService;
+import com.darong.malgage_api.domain.user.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Service
+@RestController
+@RequestMapping("/api/records")
 @RequiredArgsConstructor
-@Transactional
-public class RecordService {
+public class RecordController {
 
-    private final RecordRepository recordRepository;
-    private final CategoryRepository categoryRepository;
-    private final EmotionRepository emotionRepository;
+    private final RecordService recordService;
 
-    public RecordResponseDto create(RecordRequestDto request) {
-        Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
-        Emotion emotion = emotionRepository.findById(request.getEmotionId())
-                .orElseThrow(() -> new IllegalArgumentException("Emotion not found"));
-
-        Record record = Record.create(
-                request.getAmount(),
-                request.getType(),
-                request.getDate(),
-                category,
-                emotion,
-                request.getPaymentMethod(),
-                request.isInstallment(),
-                request.getMemo(),
-                request.getUser() // User는 컨트롤러나 서비스에서 주입해야 함
-        );
-
-        recordRepository.save(record);
-        return RecordResponseDto.from(record);
+    // ✅ 레코드 등록
+    @PostMapping
+    public ResponseEntity<RecordResponseDto> createRecord(@RequestBody RecordRequestDto request) {
+        User user = getFakeUser(); // 소셜 로그인 전 임시 유저
+        RecordResponseDto response = recordService.create(request, user);
+        return ResponseEntity.ok(response);
     }
 
-    public RecordResponseDto get(Long id) {
-        Record record = recordRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Record not found"));
-        return RecordResponseDto.from(record);
+    // ✅ 단건 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<RecordResponseDto> getRecord(@PathVariable Long id) {
+        RecordResponseDto response = recordService.get(id);
+        return ResponseEntity.ok(response);
     }
 
-    public RecordResponseDto update(Long id, RecordRequestDto request) {
-        Record record = recordRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Record not found"));
-
-        Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
-        Emotion emotion = emotionRepository.findById(request.getEmotionId())
-                .orElseThrow(() -> new IllegalArgumentException("Emotion not found"));
-
-        record.update(
-                request.getAmount(),
-                request.getType(),
-                request.getDate(),
-                category,
-                emotion,
-                request.getPaymentMethod(),
-                request.isInstallment(),
-                request.getMemo()
-        );
-
-        return RecordResponseDto.from(record);
+    // ✅ 전체 조회
+    @GetMapping
+    public ResponseEntity<List<RecordResponseDto>> getAllRecords() {
+        List<RecordResponseDto> responses = recordService.getAll();
+        return ResponseEntity.ok(responses);
     }
 
-    public void delete(Long id) {
-        recordRepository.deleteById(id);
+    // ✅ 수정
+    @PutMapping("/{id}")
+    public ResponseEntity<RecordResponseDto> updateRecord(@PathVariable Long id, @RequestBody RecordRequestDto request) {
+        RecordResponseDto response = recordService.update(id, request);
+        return ResponseEntity.ok(response);
     }
 
-    public List<RecordResponseDto> getAll() {
-        return recordRepository.findAll()
-                .stream()
-                .map(RecordResponseDto::from)
-                .collect(Collectors.toList());
+    // ✅ 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRecord(@PathVariable Long id) {
+        recordService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // ✅ 임시 유저 생성 (소셜 로그인 연동 전 테스트용)
+    private User getFakeUser() {
+        return new User(1L, "유나");
     }
 }

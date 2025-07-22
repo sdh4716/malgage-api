@@ -1,4 +1,4 @@
-package com.darong.malgage_api.domain.record;
+package com.darong.malgage_api.domain.category;
 
 import com.darong.malgage_api.domain.user.User;
 import jakarta.persistence.*;

@@ -1,4 +1,5 @@
 package com.darong.malgage_api.domain.record;
 
-public class RecordType {
+public enum RecordType {
+    INCOME, EXPENSE
 }
