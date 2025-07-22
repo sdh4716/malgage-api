@@ -1,9 +1,8 @@
 // 경로: com.darong.malgage_api.domain.record.controller
-package com.darong.malgage_api.domain.record.controller;
+package com.darong.malgage_api.domain.record;
 
 import com.darong.malgage_api.domain.record.dto.RecordRequestDto;
 import com.darong.malgage_api.domain.record.dto.RecordResponseDto;
-import com.darong.malgage_api.domain.record.service.RecordService;
 import com.darong.malgage_api.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +42,8 @@ public class RecordController {
     // ✅ 수정
     @PutMapping("/{id}")
     public ResponseEntity<RecordResponseDto> updateRecord(@PathVariable Long id, @RequestBody RecordRequestDto request) {
-        RecordResponseDto response = recordService.update(id, request);
+        User user = getFakeUser(); // 테스트용 임시 유저
+        RecordResponseDto response = recordService.update(id, request, user);
         return ResponseEntity.ok(response);
     }
 

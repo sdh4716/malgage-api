@@ -1,9 +1,8 @@
-// 경로: com.darong.malgage_api.domain.record
 package com.darong.malgage_api.domain.record;
 
 import com.darong.malgage_api.domain.user.User;
-import com.darong.malgage_api.domain.category.Category;
-import com.darong.malgage_api.domain.emotion.Emotion;
+import com.darong.malgage_api.domain.category.UserCategory;
+import com.darong.malgage_api.domain.emotion.UserEmotion;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,12 +28,12 @@ public class Record {
     private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @JoinColumn(name = "user_category_id", nullable = false)
+    private UserCategory category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "emotion_id")
-    private Emotion emotion;
+    @JoinColumn(name = "user_emotion_id", nullable = false)
+    private UserEmotion emotion;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
@@ -46,14 +45,15 @@ public class Record {
     private String memo;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     // ✅ 생성 메서드
     public static Record create(int amount,
                                 RecordType type,
                                 LocalDate date,
-                                Category category,
-                                Emotion emotion,
+                                UserCategory category,
+                                UserEmotion emotion,
                                 PaymentMethod paymentMethod,
                                 boolean isInstallment,
                                 int installmentMonths,
@@ -77,8 +77,8 @@ public class Record {
     public void update(int amount,
                        RecordType type,
                        LocalDate date,
-                       Category category,
-                       Emotion emotion,
+                       UserCategory category,
+                       UserEmotion emotion,
                        PaymentMethod paymentMethod,
                        boolean installment,
                        int installmentMonths,
