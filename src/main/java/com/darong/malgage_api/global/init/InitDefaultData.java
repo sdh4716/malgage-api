@@ -21,8 +21,8 @@ public class InitDefaultData implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        initDefaultCategories();
-        initDefaultEmotions();
+        //initDefaultCategories();
+        //initDefaultEmotions();
     }
 
     private void initDefaultCategories() {

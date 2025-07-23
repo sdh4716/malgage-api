@@ -1,6 +1,11 @@
 package com.darong.malgage_api.global.gpt.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 // 요청 DTO 클래스
+@Setter
+@Getter
 public class AnalyzeRequest {
     private String text;
 
@@ -11,11 +16,4 @@ public class AnalyzeRequest {
         this.text = text;
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
 }
