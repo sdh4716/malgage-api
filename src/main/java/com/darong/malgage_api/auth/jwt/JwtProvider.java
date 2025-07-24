@@ -3,16 +3,23 @@ package com.darong.malgage_api.auth.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.darong.malgage_api.auth.exception.TokenExpiredExceptionCustom;
+import com.darong.malgage_api.auth.exception.TokenInvalidException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Date;
 
 @Component
+@RequiredArgsConstructor
 public class JwtProvider {
 
     @Value("${jwt.secret}")
@@ -22,14 +29,17 @@ public class JwtProvider {
         return Algorithm.HMAC256(secret);
     }
 
+    private JWTVerifier verifier() {
+        return JWT.require(algorithm()).build();
+    }
+
     public String createAccessToken(String email) {
         return JWT.create()
                 .withSubject("AccessToken")
                 .withClaim("email", email)
                 .withIssuedAt(new Date())
-                //.withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // 30분
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60)) // 1분
-                .sign(Algorithm.HMAC256(secret));
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // 30분
+                .sign(algorithm());
     }
 
     public String createRefreshToken() {
@@ -37,25 +47,57 @@ public class JwtProvider {
                 .withSubject("RefreshToken")
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 14)) // 14일
-                .sign(Algorithm.HMAC256(secret));
+                .sign(algorithm());
+    }
+
+    /**
+     * 모든 토큰의 유효성 확인 (만료 포함)
+     */
+    public boolean validateToken(String token) {
+        try {
+            JWTVerifier verifier = JWT.require(algorithm()).build();
+            verifier.verify(token);
+            return true;
+        } catch (JWTVerificationException e) {
+            return false;
+        }
     }
 
 
-    // ✅ 리프레시 토큰 검증 로직
-    public void validateToken(String token) {
-        try {
-            JWTVerifier verifier = JWT.require(algorithm()).build();
-            verifier.verify(token); // 유효성 + 만료 체크
-        } catch (TokenExpiredException e) {
-            throw new RuntimeException("Access Token이 만료되었습니다.", e);
-        } catch (JWTVerificationException e) {
-            throw new RuntimeException("Access Token 검증에 실패했습니다.", e);
+    /**
+     * AccessToken 전용 유효성 확인
+     */
+    public void validateAccessToken(String token) {
+        DecodedJWT jwt = getDecodedJWT(token);
+        if (!"AccessToken".equals(jwt.getSubject())) {
+            throw new TokenInvalidException("AccessToken 형식이 아닙니다.");
+        }
+    }
+
+    /**
+     * RefreshToken 전용 유효성 확인
+     */
+    public void validateRefreshToken(String token) {
+        DecodedJWT jwt = getDecodedJWT(token);
+        if (!"RefreshToken".equals(jwt.getSubject())) {
+            throw new TokenInvalidException("RefreshToken 형식이 아닙니다.");
         }
     }
 
     public String extractEmail(String token) {
-        DecodedJWT decoded = JWT.require(algorithm()).build().verify(token);
-        return decoded.getClaim("email").asString();
+        return getDecodedJWT(token).getClaim("email").asString();
     }
 
+    public DecodedJWT getDecodedJWT(String token) {
+        return verifier().verify(token);
+    }
+
+    /**
+     * Spring Security 인증 객체 반환
+     */
+    public Authentication getAuthentication(String accessToken) {
+        String email = extractEmail(accessToken);
+        User userDetails = new User(email, "", Collections.emptyList()); // 권한은 따로 설정하지 않음
+        return new UsernamePasswordAuthenticationToken(userDetails, accessToken, userDetails.getAuthorities());
+    }
 }

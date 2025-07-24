@@ -5,6 +5,7 @@ import com.darong.malgage_api.auth.dto.TokenResponse;
 import com.darong.malgage_api.auth.jwt.JwtProvider;
 import com.darong.malgage_api.auth.service.AuthService;
 import com.darong.malgage_api.auth.service.GoogleLoginService;
+import com.darong.malgage_api.auth.util.TokenUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,14 +30,16 @@ public class AuthController {
     // ✅ AccessToken 유효성 검사 API
     @GetMapping("/validate")
     public ResponseEntity<?> validateAccessToken(HttpServletRequest request) {
-        String token = resolveToken(request);
-        if (token == null) {
+
+        System.out.println("validate 탐");
+        String accessToken = TokenUtil.resolveToken(request);
+        if (accessToken == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("토큰이 없습니다.");
         }
 
         try {
-            jwtProvider.validateToken(token); // 예외 발생 시 catch로
-            String email = jwtProvider.extractEmail(token);
+            jwtProvider.validateToken(accessToken); // 예외 발생 시 catch로
+            String email = jwtProvider.extractEmail(accessToken);
             return ResponseEntity.ok("유효한 토큰입니다. (email: " + email + ")");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
@@ -46,7 +49,8 @@ public class AuthController {
     // ✅ AccessToken, RefreshToken 재발급 API
     @PostMapping("/reissue-access-token")
     public ResponseEntity<?> reissueAccessToken(HttpServletRequest request) {
-        String refreshToken = resolveToken(request);
+        System.out.println("reissue 탐");
+        String refreshToken = TokenUtil.resolveToken(request);
         if (refreshToken == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("RefreshToken이 없습니다.");
         }
@@ -69,16 +73,5 @@ public class AuthController {
         String refreshToken = authHeader.substring(7);
         authService.logoutByRefreshToken(refreshToken);
         return ResponseEntity.ok("로그아웃 완료");
-    }
-
-
-
-    // ✅ Authorization 헤더에서 Bearer 토큰 추출
-    private String resolveToken(HttpServletRequest request) {
-        String bearer = request.getHeader("Authorization");
-        if (bearer != null && bearer.startsWith("Bearer ")) {
-            return bearer.substring(7);
-        }
-        return null;
     }
 }

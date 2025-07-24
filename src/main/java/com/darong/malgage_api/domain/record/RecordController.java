@@ -6,6 +6,7 @@ import com.darong.malgage_api.domain.record.dto.RecordResponseDto;
 import com.darong.malgage_api.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,10 +20,23 @@ public class RecordController {
 
     // ✅ 레코드 등록
     @PostMapping
-    public ResponseEntity<RecordResponseDto> createRecord(@RequestBody RecordRequestDto request) {
-        User user = getFakeUser(); // 소셜 로그인 전 임시 유저
+    public ResponseEntity<RecordResponseDto> createRecord(
+            @AuthenticationPrincipal User user,
+            @RequestBody RecordRequestDto request
+    ) {
         RecordResponseDto response = recordService.create(request, user);
         return ResponseEntity.ok(response);
+    }
+
+    // ✅ 월별 조회 (예: /api/records/by-month?year=2025&month=7)
+    @GetMapping("/by-month")
+    public ResponseEntity<List<RecordResponseDto>> getMonthlyRecords(
+            @AuthenticationPrincipal User user,
+            @RequestParam int year,
+            @RequestParam int month
+    ) {
+        List<RecordResponseDto> responses = recordService.getMonthlyRecords(user, year, month);
+        return ResponseEntity.ok(responses);
     }
 
     // ✅ 단건 조회
@@ -33,7 +47,7 @@ public class RecordController {
     }
 
     // ✅ 전체 조회
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<RecordResponseDto>> getAllRecords() {
         List<RecordResponseDto> responses = recordService.getAll();
         return ResponseEntity.ok(responses);
@@ -41,8 +55,11 @@ public class RecordController {
 
     // ✅ 수정
     @PutMapping("/{id}")
-    public ResponseEntity<RecordResponseDto> updateRecord(@PathVariable Long id, @RequestBody RecordRequestDto request) {
-        User user = getFakeUser(); // 테스트용 임시 유저
+    public ResponseEntity<RecordResponseDto> updateRecord(
+            @AuthenticationPrincipal User user,
+            @PathVariable Long id,
+            @RequestBody RecordRequestDto request
+    ) {
         RecordResponseDto response = recordService.update(id, request, user);
         return ResponseEntity.ok(response);
     }
@@ -52,10 +69,5 @@ public class RecordController {
     public ResponseEntity<Void> deleteRecord(@PathVariable Long id) {
         recordService.delete(id);
         return ResponseEntity.noContent().build();
-    }
-
-    // ✅ 임시 유저 생성 (소셜 로그인 연동 전 테스트용)
-    private User getFakeUser() {
-        return new User(1L, "유나");
     }
 }

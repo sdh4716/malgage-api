@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,6 +55,17 @@ public class RecordService {
                 .orElseThrow(() -> new IllegalArgumentException("Record not found"));
         return RecordResponseDto.from(record);
     }
+
+    public List<RecordResponseDto> getMonthlyRecords(User user, int year, int month) {
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+
+        List<Record> records = recordRepository.findByUserAndDateBetween(user, startDate, endDate);
+        return records.stream()
+                .map(RecordResponseDto::from)
+                .toList();
+    }
+
 
     public RecordResponseDto update(Long id, RecordRequestDto request, User user) {
         Record record = recordRepository.findById(id)
