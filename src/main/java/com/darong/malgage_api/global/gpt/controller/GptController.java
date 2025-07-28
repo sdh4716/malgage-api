@@ -1,6 +1,6 @@
 package com.darong.malgage_api.global.gpt.controller;
 
-import com.darong.malgage_api.global.gpt.dto.AnalyzeRequest;
+import com.darong.malgage_api.global.gpt.dto.AnalysisRequest;
 import com.darong.malgage_api.global.gpt.dto.MultipleRecordAnalysisResponse;
 import com.darong.malgage_api.global.gpt.service.GptService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class GptController {
     }
 
     @PostMapping("/records/analyze")
-    public ResponseEntity<MultipleRecordAnalysisResponse> analyzeText(@RequestBody AnalyzeRequest request) {
+    public ResponseEntity<MultipleRecordAnalysisResponse> analyzeText(@RequestBody AnalysisRequest request) {
         try {
             log.info("기록 분석 요청: {}", request.getText());
 

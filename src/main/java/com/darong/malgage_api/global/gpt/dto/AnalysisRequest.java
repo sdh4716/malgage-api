@@ -6,13 +6,13 @@ import lombok.Setter;
 // 요청 DTO 클래스
 @Setter
 @Getter
-public class AnalyzeRequest {
+public class AnalysisRequest {
     private String text;
 
-    public AnalyzeRequest() {
+    public AnalysisRequest() {
     }
 
-    public AnalyzeRequest(String text) {
+    public AnalysisRequest(String text) {
         this.text = text;
     }
 

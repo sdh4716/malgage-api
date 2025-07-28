@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -15,7 +16,7 @@ public class RecordResponseDto {
     private int amount;
     private String category;
     private String emotion;
-    private LocalDate date;
+    private LocalDateTime date;
     private String type;
     private String paymentMethod;
     private boolean isInstallment;
@@ -31,7 +32,7 @@ public class RecordResponseDto {
                 .date(record.getDate())
                 .type(record.getType().toString())
                 .paymentMethod(record.getPaymentMethod().toString())
-                .isInstallment(record.isInstallment())
+                .isInstallment(record.getIsInstallment())
                 .installmentMonth(record.getInstallmentMonths())
                 .memo(record.getMemo())
                 .build();

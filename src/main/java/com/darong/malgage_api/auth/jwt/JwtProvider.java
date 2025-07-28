@@ -6,13 +6,16 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.darong.malgage_api.auth.exception.CustomAuthException;
 import com.darong.malgage_api.auth.exception.TokenExpiredExceptionCustom;
 import com.darong.malgage_api.auth.exception.TokenInvalidException;
+import com.darong.malgage_api.auth.security.UserPrincipal;
+import com.darong.malgage_api.domain.user.User;
+import com.darong.malgage_api.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -21,6 +24,8 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class JwtProvider {
+
+    private final UserRepository userRepository;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -97,7 +102,12 @@ public class JwtProvider {
      */
     public Authentication getAuthentication(String accessToken) {
         String email = extractEmail(accessToken);
-        User userDetails = new User(email, "", Collections.emptyList()); // 권한은 따로 설정하지 않음
-        return new UsernamePasswordAuthenticationToken(userDetails, accessToken, userDetails.getAuthorities());
+        User userEntity = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomAuthException("유저를 찾을 수 없습니다."));
+
+        UserPrincipal userPrincipal = new UserPrincipal(userEntity);
+
+        return new UsernamePasswordAuthenticationToken(userPrincipal, accessToken, userPrincipal.getAuthorities());
     }
+
 }

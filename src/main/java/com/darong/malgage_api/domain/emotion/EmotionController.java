@@ -1,11 +1,16 @@
 package com.darong.malgage_api.domain.emotion;
 
+import com.darong.malgage_api.auth.CurrentUser;
+import com.darong.malgage_api.domain.category.CategoryScope;
+import com.darong.malgage_api.domain.category.dto.CategoryResponseDto;
 import com.darong.malgage_api.domain.emotion.dto.EmotionResponseDto;
+import com.darong.malgage_api.domain.emotion.service.EmotionService;
 import com.darong.malgage_api.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,9 +23,26 @@ public class EmotionController {
 
     private final EmotionService emotionService;
 
-    @GetMapping
-    public ResponseEntity<List<EmotionResponseDto>> getEmotions(@AuthenticationPrincipal User user) {
-        List<EmotionResponseDto> result = emotionService.getEmotionsForUser(user);
-        return ResponseEntity.ok(result);
+    /**
+     * ✅ 사용자의 모든 감정 조회
+     */
+    @GetMapping("/all")
+    public ResponseEntity<List<EmotionResponseDto>> getAllEmotions(
+            @CurrentUser User user  // 🎉 해당 사용자의 감정 조회
+    ) {
+        List<EmotionResponseDto> responses = emotionService.getAllEmotions(user);
+        return ResponseEntity.ok(responses);
+    }
+
+    /**
+     * ✅ CategoryScope 기준 카테고리 조회
+     */
+    @GetMapping("/scope/{scope}")
+    public ResponseEntity<List<EmotionResponseDto>> getCategoriesByScope(
+            @CurrentUser User user,  // 🎉 사용자 권한 확인
+            @PathVariable EmotionScope scope
+    ) {
+        List<EmotionResponseDto> responses = emotionService.getEmotionsByScope(user, scope);
+        return ResponseEntity.ok(responses);
     }
 }

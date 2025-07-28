@@ -1,16 +1,16 @@
 package com.darong.malgage_api.domain.record.dto;
 
 import com.darong.malgage_api.domain.record.*;
-import com.darong.malgage_api.domain.record.Record;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 public class RecordRequestDto {
     private int amount;
     private RecordType type;
-    private LocalDate date;
+    private LocalDateTime date;
     private Long categoryId;
     private Long emotionId;
     private PaymentMethod paymentMethod;

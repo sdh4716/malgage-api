@@ -43,9 +43,13 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 // ✅ 요청 URL에 따른 접근 권한 설정
-                .authorizeHttpRequests(auth -> auth
+                /*.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // 로그인, 회원가입 등 인증 필요 없는 엔드포인트 허용
                         .anyRequest().authenticated() // 나머지 모든 요청은 인증 필요
+                )*/
+
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll() // 나머지 모든 요청은 인증 필요
                 )
 
                 // ✅ JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
