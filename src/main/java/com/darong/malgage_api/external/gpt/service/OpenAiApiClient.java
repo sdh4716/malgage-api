@@ -1,6 +1,6 @@
 package com.darong.malgage_api.global.gpt.service;
 
-import com.darong.malgage_api.global.gpt.config.OpenAiConfig;
+import com.darong.malgage_api.global.config.OpenAiConfig;
 import com.darong.malgage_api.global.gpt.dto.OpenAiRequest;
 import com.darong.malgage_api.global.gpt.dto.OpenAiResponse;
 import com.darong.malgage_api.global.gpt.exception.OpenAiApiException;

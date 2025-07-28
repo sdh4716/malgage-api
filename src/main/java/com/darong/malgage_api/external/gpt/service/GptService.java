@@ -1,6 +1,6 @@
 package com.darong.malgage_api.global.gpt.service;
 
-import com.darong.malgage_api.global.gpt.config.OpenAiConfig;
+import com.darong.malgage_api.global.config.OpenAiConfig;
 import com.darong.malgage_api.global.gpt.constants.PromptConstants;
 import com.darong.malgage_api.global.gpt.dto.*;
 import com.darong.malgage_api.global.gpt.exception.OpenAiApiException;
@@ -8,14 +8,8 @@ import com.darong.malgage_api.global.gpt.exception.RateLimitException;
 import com.darong.malgage_api.global.gpt.factory.ResponseFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
-import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
