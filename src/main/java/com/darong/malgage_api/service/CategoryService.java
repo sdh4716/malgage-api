@@ -1,9 +1,14 @@
 // domain/category/service/CategoryService.java
 package com.darong.malgage_api.service;
 
+import com.darong.malgage_api.auth.exception.CustomAuthException;
+import com.darong.malgage_api.controller.dto.request.category.CategoryRequestDto;
+import com.darong.malgage_api.controller.dto.request.category.CategoryVisibilityRequestDto;
 import com.darong.malgage_api.domain.category.Category;
 import com.darong.malgage_api.domain.category.CategoryScope;
 import com.darong.malgage_api.controller.dto.response.CategoryResponseDto;
+import com.darong.malgage_api.domain.category.UserCategoryVisibility;
+import com.darong.malgage_api.global.exception.NotFoundException;
 import com.darong.malgage_api.repository.category.CategoryQueryRepository;
 import com.darong.malgage_api.repository.category.CategoryRepository;
 import com.darong.malgage_api.repository.category.UserCategoryVisibilityRepository;
@@ -59,5 +64,51 @@ public class CategoryService {
                 .map(CategoryResponseDto::from)
                 .collect(Collectors.toList());
     }
+
+    /**
+     * 카테고리 등록
+     */
+    @Transactional
+    public CategoryResponseDto createCustomCategory(User user, CategoryRequestDto dto) {
+        Category category = Category.createCustom(
+                dto.getName(),
+                dto.getType(),
+                dto.getIconName(),
+                user,
+                dto.getSortOrder()
+        );
+
+        Category saved = categoryRepository.save(category);
+        return CategoryResponseDto.from(saved);
+    }
+
+    /**
+     * 카테고리 가시성 설정
+     */
+    @Transactional
+    public void updateVisibility(User user, CategoryVisibilityRequestDto dto) {
+        Category category = categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(() -> new NotFoundException("카테고리를 찾을 수 없습니다."));
+
+        // 본인이 소유하거나 기본 카테고리인 경우만 허용
+        if (category.isCustomCategory() && !category.belongsToUser(user.getId())) {
+            throw new CustomAuthException("해당 카테고리에 대한 권한이 없습니다.");
+        }
+
+        UserCategoryVisibility visibility = visibilityRepository.findByUser_IdAndCategory_Id(user.getId(), dto.getCategoryId())
+                .orElseGet(() -> UserCategoryVisibility.createVisible(user, category)); // 없으면 생성
+
+        if (dto.getVisible() != null) {
+            if (dto.getVisible()) {
+                visibility.show();
+            } else {
+                visibility.hide();
+            }
+        }
+
+        visibilityRepository.save(visibility);
+    }
+
+
 
 }

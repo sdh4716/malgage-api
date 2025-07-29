@@ -1,10 +1,13 @@
 package com.darong.malgage_api.controller;
 
 import com.darong.malgage_api.auth.CurrentUser;
+import com.darong.malgage_api.controller.dto.request.category.CategoryRequestDto;
+import com.darong.malgage_api.controller.dto.request.category.CategoryVisibilityRequestDto;
 import com.darong.malgage_api.domain.category.CategoryScope;
 import com.darong.malgage_api.controller.dto.response.CategoryResponseDto;
 import com.darong.malgage_api.service.CategoryService;
 import com.darong.malgage_api.domain.user.User;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +46,24 @@ public class CategoryController {
     ) {
         List<CategoryResponseDto> responses = categoryService.getCategoriesByScope(user, scope);
         return ResponseEntity.ok(responses);
+    }
+
+    @PostMapping
+    public ResponseEntity<CategoryResponseDto> createCustomCategory(
+            @CurrentUser User user,
+            @Valid @RequestBody CategoryRequestDto dto
+    ) {
+        CategoryResponseDto response = categoryService.createCustomCategory(user, dto);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/visibility")
+    public ResponseEntity<Void> updateVisibility(
+            @CurrentUser User user,
+            @RequestBody CategoryVisibilityRequestDto dto
+    ) {
+        categoryService.updateVisibility(user, dto);
+        return ResponseEntity.ok().build();
     }
 }
 

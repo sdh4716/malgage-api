@@ -1,4 +1,4 @@
-package com.darong.malgage_api.controller.dto.request;
+package com.darong.malgage_api.controller.dto.request.category;
 
 import com.darong.malgage_api.domain.category.CategoryType;
 import jakarta.validation.constraints.Min;
@@ -17,6 +17,10 @@ public class CategoryRequestDto {
     @NotBlank(message = "카테고리명은 필수입니다.")
     @Size(max = 50, message = "카테고리명은 50자를 초과할 수 없습니다.")
     private String name;
+
+    @NotBlank(message = "아이콘명은 필수입니다.")
+    @Size(max = 50, message = "아이콘명은 50자를 초과할 수 없습니다.")
+    private String iconName;
 
     @NotNull(message = "카테고리 타입은 필수입니다.")
     private CategoryType type;

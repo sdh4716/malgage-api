@@ -15,6 +15,7 @@ public class EmotionResponseDto {
     private String name;
     private Integer sortOrder;
     private EmotionScope scope;
+    private String iconName;
     private boolean isDefault;   // 플러터에서 쓰기 편하게
     private boolean isCustom;    // 플러터에서 쓰기 편하게
     private Long userId;         // 커스텀 감정의 경우 소유자 ID
@@ -28,6 +29,7 @@ public class EmotionResponseDto {
                 emotion.getName(),
                 emotion.getSortOrder(),
                 emotion.getScope(),
+                emotion.getIconName(),
                 emotion.isDefaultEmotion(),    // scope == DEFAULT
                 emotion.isCustomEmotion(),     // scope == CUSTOM
                 emotion.getUser() != null ? emotion.getUser().getId() : null,
