@@ -1,6 +1,5 @@
-package com.darong.malgage_api.domain.emotion.repository;
+package com.darong.malgage_api.repository.emotion;
 
-import com.darong.malgage_api.domain.category.Category;
 import com.darong.malgage_api.domain.emotion.Emotion;
 import com.darong.malgage_api.domain.emotion.EmotionScope;
 import org.springframework.data.jpa.repository.JpaRepository;

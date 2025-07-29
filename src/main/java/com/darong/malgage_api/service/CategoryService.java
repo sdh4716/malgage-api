@@ -1,15 +1,12 @@
 // domain/category/service/CategoryService.java
-package com.darong.malgage_api.domain.category.service;
+package com.darong.malgage_api.service;
 
 import com.darong.malgage_api.domain.category.Category;
 import com.darong.malgage_api.domain.category.CategoryScope;
-import com.darong.malgage_api.domain.category.CategoryType;
-import com.darong.malgage_api.domain.category.UserCategoryVisibility;
-import com.darong.malgage_api.domain.category.dto.CategoryRequestDto;
-import com.darong.malgage_api.domain.category.dto.CategoryResponseDto;
-import com.darong.malgage_api.domain.category.repository.CategoryQueryRepository;
-import com.darong.malgage_api.domain.category.repository.CategoryRepository;
-import com.darong.malgage_api.domain.category.repository.UserCategoryVisibilityRepository;
+import com.darong.malgage_api.controller.dto.response.CategoryResponseDto;
+import com.darong.malgage_api.repository.category.CategoryQueryRepository;
+import com.darong.malgage_api.repository.category.CategoryRepository;
+import com.darong.malgage_api.repository.category.UserCategoryVisibilityRepository;
 import com.darong.malgage_api.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

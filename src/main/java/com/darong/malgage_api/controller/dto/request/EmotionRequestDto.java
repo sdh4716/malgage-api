@@ -1,5 +1,5 @@
 // domain/emotion/dto/EmotionRequestDto.java
-package com.darong.malgage_api.domain.emotion.dto;
+package com.darong.malgage_api.controller.dto.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

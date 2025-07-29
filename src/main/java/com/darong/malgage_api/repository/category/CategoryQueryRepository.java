@@ -1,5 +1,5 @@
 // domain/category/repository/CategoryQueryRepository.java
-package com.darong.malgage_api.domain.category.repository;
+package com.darong.malgage_api.repository.category;
 
 import com.darong.malgage_api.domain.category.Category;
 import com.darong.malgage_api.domain.category.CategoryScope;

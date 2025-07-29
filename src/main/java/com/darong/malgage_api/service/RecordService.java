@@ -1,13 +1,9 @@
 // domain/record/RecordService.java
-package com.darong.malgage_api.domain.record;
+package com.darong.malgage_api.service;
 
-import com.darong.malgage_api.domain.category.Category;
-import com.darong.malgage_api.domain.category.repository.CategoryRepository;
-import com.darong.malgage_api.domain.emotion.Emotion;
-import com.darong.malgage_api.domain.emotion.repository.EmotionRepository;
-import com.darong.malgage_api.domain.record.dto.RecordRequestDto;
-import com.darong.malgage_api.domain.record.dto.RecordResponseDto;
-import com.darong.malgage_api.domain.record.repository.RecordRepository;
+import com.darong.malgage_api.controller.dto.response.RecordResponseDto;
+import com.darong.malgage_api.domain.record.Record;
+import com.darong.malgage_api.repository.record.RecordRepository;
 import com.darong.malgage_api.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

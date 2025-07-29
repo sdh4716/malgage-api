@@ -1,4 +1,4 @@
-package com.darong.malgage_api.domain.category.dto;
+package com.darong.malgage_api.controller.dto.request;
 
 import com.darong.malgage_api.domain.category.CategoryType;
 import jakarta.validation.constraints.Min;

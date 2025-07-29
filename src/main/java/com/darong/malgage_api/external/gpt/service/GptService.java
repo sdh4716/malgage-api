@@ -1,11 +1,15 @@
-package com.darong.malgage_api.global.gpt.service;
+package com.darong.malgage_api.external.gpt.service;
 
+import com.darong.malgage_api.controller.dto.response.MultipleRecordAnalysisResponse;
+import com.darong.malgage_api.external.gpt.dto.OpenAiMessage;
+import com.darong.malgage_api.external.gpt.dto.OpenAiRequest;
+import com.darong.malgage_api.external.gpt.dto.OpenAiResponse;
+import com.darong.malgage_api.controller.dto.response.RecordAnalysisResponse;
 import com.darong.malgage_api.global.config.OpenAiConfig;
-import com.darong.malgage_api.global.gpt.constants.PromptConstants;
-import com.darong.malgage_api.global.gpt.dto.*;
-import com.darong.malgage_api.global.gpt.exception.OpenAiApiException;
-import com.darong.malgage_api.global.gpt.exception.RateLimitException;
-import com.darong.malgage_api.global.gpt.factory.ResponseFactory;
+import com.darong.malgage_api.global.constants.PromptConstants;
+import com.darong.malgage_api.external.gpt.exception.OpenAiApiException;
+import com.darong.malgage_api.external.gpt.exception.RateLimitException;
+import com.darong.malgage_api.external.gpt.factory.ResponseFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

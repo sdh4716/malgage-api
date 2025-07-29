@@ -1,4 +1,4 @@
-package com.darong.malgage_api.global.gpt.config;
+package com.darong.malgage_api.global.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -1,4 +1,4 @@
-package com.darong.malgage_api.global.gpt.dto;
+package com.darong.malgage_api.controller.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

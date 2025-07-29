@@ -1,8 +1,8 @@
-package com.darong.malgage_api.global.gpt.controller;
+package com.darong.malgage_api.controller;
 
-import com.darong.malgage_api.global.gpt.dto.AnalysisRequest;
-import com.darong.malgage_api.global.gpt.dto.MultipleRecordAnalysisResponse;
-import com.darong.malgage_api.global.gpt.service.GptService;
+import com.darong.malgage_api.controller.dto.request.AnalysisRequest;
+import com.darong.malgage_api.controller.dto.response.MultipleRecordAnalysisResponse;
+import com.darong.malgage_api.external.gpt.service.GptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

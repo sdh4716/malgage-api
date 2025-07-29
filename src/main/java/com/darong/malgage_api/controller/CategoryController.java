@@ -1,12 +1,10 @@
-package com.darong.malgage_api.domain.category;
+package com.darong.malgage_api.controller;
 
 import com.darong.malgage_api.auth.CurrentUser;
-import com.darong.malgage_api.auth.exception.CustomAuthException;
-import com.darong.malgage_api.domain.category.dto.CategoryRequestDto;
-import com.darong.malgage_api.domain.category.dto.CategoryResponseDto;
-import com.darong.malgage_api.domain.category.service.CategoryService;
+import com.darong.malgage_api.domain.category.CategoryScope;
+import com.darong.malgage_api.controller.dto.response.CategoryResponseDto;
+import com.darong.malgage_api.service.CategoryService;
 import com.darong.malgage_api.domain.user.User;
-import com.darong.malgage_api.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

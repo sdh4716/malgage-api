@@ -1,14 +1,12 @@
-package com.darong.malgage_api.domain.emotion;
+package com.darong.malgage_api.controller;
 
 import com.darong.malgage_api.auth.CurrentUser;
-import com.darong.malgage_api.domain.category.CategoryScope;
-import com.darong.malgage_api.domain.category.dto.CategoryResponseDto;
-import com.darong.malgage_api.domain.emotion.dto.EmotionResponseDto;
-import com.darong.malgage_api.domain.emotion.service.EmotionService;
+import com.darong.malgage_api.domain.emotion.EmotionScope;
+import com.darong.malgage_api.controller.dto.response.EmotionResponseDto;
+import com.darong.malgage_api.service.EmotionService;
 import com.darong.malgage_api.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

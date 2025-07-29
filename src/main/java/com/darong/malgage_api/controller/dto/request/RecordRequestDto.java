@@ -1,9 +1,8 @@
-package com.darong.malgage_api.domain.record.dto;
+package com.darong.malgage_api.controller.dto.request;
 
 import com.darong.malgage_api.domain.record.*;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter

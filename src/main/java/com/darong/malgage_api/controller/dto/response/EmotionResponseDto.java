@@ -1,5 +1,5 @@
 // domain/emotion/dto/EmotionResponseDto.java
-package com.darong.malgage_api.domain.emotion.dto;
+package com.darong.malgage_api.controller.dto.response;
 
 import com.darong.malgage_api.domain.emotion.Emotion;
 import com.darong.malgage_api.domain.emotion.EmotionScope;

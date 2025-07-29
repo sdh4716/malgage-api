@@ -1,12 +1,11 @@
 // domain/record/RecordController.java
-package com.darong.malgage_api.domain.record;
+package com.darong.malgage_api.controller;
 
 import com.darong.malgage_api.auth.CurrentUser;
-import com.darong.malgage_api.domain.record.dto.RecordRequestDto;
-import com.darong.malgage_api.domain.record.dto.RecordResponseDto;
+import com.darong.malgage_api.service.RecordService;
+import com.darong.malgage_api.controller.dto.response.RecordResponseDto;
 import com.darong.malgage_api.domain.user.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

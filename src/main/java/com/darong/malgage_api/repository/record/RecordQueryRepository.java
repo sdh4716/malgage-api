@@ -1,4 +1,4 @@
-package com.darong.malgage_api.domain.record.repository;
+package com.darong.malgage_api.repository.record;
 
 import com.darong.malgage_api.domain.record.Record;
 import com.darong.malgage_api.domain.user.User;

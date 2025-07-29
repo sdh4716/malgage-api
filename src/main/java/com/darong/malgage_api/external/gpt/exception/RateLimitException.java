@@ -1,4 +1,4 @@
-package com.darong.malgage_api.global.gpt.exception;
+package com.darong.malgage_api.external.gpt.exception;
 
 public class RateLimitException extends OpenAiApiException {
     public RateLimitException(String message) {

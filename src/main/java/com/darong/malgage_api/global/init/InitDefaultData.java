@@ -2,9 +2,9 @@ package com.darong.malgage_api.global.init;
 
 import com.darong.malgage_api.domain.category.Category;
 import com.darong.malgage_api.domain.category.CategoryType;
-import com.darong.malgage_api.domain.category.repository.CategoryRepository;
+import com.darong.malgage_api.repository.category.CategoryRepository;
 import com.darong.malgage_api.domain.emotion.Emotion;
-import com.darong.malgage_api.domain.emotion.repository.EmotionRepository;
+import com.darong.malgage_api.repository.emotion.EmotionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;

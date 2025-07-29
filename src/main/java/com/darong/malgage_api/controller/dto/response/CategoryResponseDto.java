@@ -1,5 +1,5 @@
 // domain/category/dto/CategoryResponseDto.java
-package com.darong.malgage_api.domain.category.dto;
+package com.darong.malgage_api.controller.dto.response;
 
 import com.darong.malgage_api.domain.category.Category;
 import com.darong.malgage_api.domain.category.CategoryScope;

@@ -1,4 +1,4 @@
-package com.darong.malgage_api.global.gpt.dto;
+package com.darong.malgage_api.external.gpt.dto;
 
 import lombok.Getter;
 import lombok.AllArgsConstructor;

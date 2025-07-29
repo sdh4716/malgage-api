@@ -1,17 +1,12 @@
 // domain/emotion/service/EmotionService.java
-package com.darong.malgage_api.domain.emotion.service;
+package com.darong.malgage_api.service;
 
-import com.darong.malgage_api.domain.category.Category;
-import com.darong.malgage_api.domain.category.CategoryScope;
-import com.darong.malgage_api.domain.category.dto.CategoryResponseDto;
 import com.darong.malgage_api.domain.emotion.Emotion;
 import com.darong.malgage_api.domain.emotion.EmotionScope;
-import com.darong.malgage_api.domain.emotion.UserEmotionVisibility;
-import com.darong.malgage_api.domain.emotion.dto.EmotionRequestDto;
-import com.darong.malgage_api.domain.emotion.dto.EmotionResponseDto;
-import com.darong.malgage_api.domain.emotion.repository.EmotionQueryRepository;
-import com.darong.malgage_api.domain.emotion.repository.EmotionRepository;
-import com.darong.malgage_api.domain.emotion.repository.UserEmotionVisibilityRepository;
+import com.darong.malgage_api.controller.dto.response.EmotionResponseDto;
+import com.darong.malgage_api.repository.emotion.EmotionQueryRepository;
+import com.darong.malgage_api.repository.emotion.EmotionRepository;
+import com.darong.malgage_api.repository.emotion.UserEmotionVisibilityRepository;
 import com.darong.malgage_api.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,5 @@
-package com.darong.malgage_api.global.gpt.dto;
+package com.darong.malgage_api.controller.dto.response;
 
-import com.darong.malgage_api.global.gpt.dto.RecordAnalysisResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

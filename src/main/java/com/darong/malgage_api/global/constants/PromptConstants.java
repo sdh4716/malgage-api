@@ -1,4 +1,4 @@
-package com.darong.malgage_api.external.gpt.constants;
+package com.darong.malgage_api.global.constants;
 
 public class PromptConstants {
 

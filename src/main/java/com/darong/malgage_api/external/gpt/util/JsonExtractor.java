@@ -1,4 +1,4 @@
-package com.darong.malgage_api.global.gpt.util;
+package com.darong.malgage_api.external.gpt.util;
 
 import lombok.extern.slf4j.Slf4j;
 
