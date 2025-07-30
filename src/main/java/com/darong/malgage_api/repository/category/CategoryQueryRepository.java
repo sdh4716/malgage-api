@@ -1,8 +1,14 @@
 // domain/category/repository/CategoryQueryRepository.java
 package com.darong.malgage_api.repository.category;
 
-import com.darong.malgage_api.domain.category.Category;
-import com.darong.malgage_api.domain.category.CategoryScope;
+import com.darong.malgage_api.controller.dto.response.CategoryResponseDto;
+import com.darong.malgage_api.controller.dto.response.QCategoryResponseDto;
+import com.darong.malgage_api.domain.category.*;
+import com.darong.malgage_api.domain.user.User;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -44,4 +50,70 @@ public class CategoryQueryRepository {
                 )
                 .fetch();
     }
+
+    public List<CategoryResponseDto> findDefaultCategoriesWithVisibility(User user, CategoryType type) {
+        QCategory category = QCategory.category;
+        QUserCategoryVisibility visibility = QUserCategoryVisibility.userCategoryVisibility;
+
+        return queryFactory
+                .select(new QCategoryResponseDto(
+                        category.id,
+                        category.name,
+                        category.type,
+                        category.sortOrder,
+                        category.scope,
+                        category.iconName,
+                        category.scope.eq(CategoryScope.DEFAULT),
+                        category.scope.eq(CategoryScope.CUSTOM),
+                        Expressions.nullExpression(Long.class),
+                        category.createdAt,
+                        category.updatedAt,
+                        visibility.isVisible.coalesce(true) // null일 때 기본값 true
+                ))
+                .from(category)
+                .leftJoin(visibility)
+                // ✅ 엔티티 참조 대신 FK 컬럼으로 직접 조인 (지연 로딩 방지)
+                .on(visibility.category.id.eq(category.id)    // category 엔티티 접근 대신 id 사용
+                        .and(visibility.user.id.eq(user.getId()))) // user 엔티티 접근 대신 id 사용
+                .where(
+                        category.scope.eq(CategoryScope.DEFAULT),
+                        type != null ? category.type.eq(type) : null
+                )
+                .orderBy(category.type.asc(), category.sortOrder.asc())
+                .fetch();
+    }
+
+    public List<CategoryResponseDto> findCustomCategoriesWithVisibility(User user, CategoryType type) {
+        QCategory category = QCategory.category;
+        QUserCategoryVisibility visibility = QUserCategoryVisibility.userCategoryVisibility;
+
+        return queryFactory
+                .select(new QCategoryResponseDto(
+                        category.id,
+                        category.name,
+                        category.type,
+                        category.sortOrder,
+                        category.scope,
+                        category.iconName,
+                        Expressions.FALSE, // isDefault = false (커스텀이므로)
+                        Expressions.TRUE,  // isCustom = true
+                        Expressions.constant(user.getId()), // ✅ 상수로 user ID 직접 설정
+                        category.createdAt,
+                        category.updatedAt,
+                        visibility.isVisible.coalesce(true) // 기본값 true
+                ))
+                .from(category)
+                .leftJoin(visibility)
+                .on(visibility.category.id.eq(category.id)
+                        .and(visibility.user.id.eq(user.getId())))
+                .where(
+                        category.scope.eq(CategoryScope.CUSTOM),
+                        type != null ? category.type.eq(type) : null,
+                        // ✅ FK 컬럼으로 직접 필터링 (Category 테이블의 user_id 컬럼)
+                        category.user.id.eq(user.getId()) // 이건 단순 where 조건이라 문제없음
+                )
+                .orderBy(category.type.asc(), category.sortOrder.asc())
+                .fetch();
+    }
+
 }

@@ -4,14 +4,15 @@ package com.darong.malgage_api.controller.dto.response;
 import com.darong.malgage_api.domain.category.Category;
 import com.darong.malgage_api.domain.category.CategoryScope;
 import com.darong.malgage_api.domain.category.CategoryType;
-import jakarta.persistence.Column;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor
 public class CategoryResponseDto {
     private Long id;
     private String name;
@@ -24,9 +25,46 @@ public class CategoryResponseDto {
     private Long userId;         // 커스텀 카테고리의 경우 소유자 ID
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Boolean isVisible;  // ← 여기에
 
-    // ✅ Category 엔티티에서 DTO로 변환
+    // 기존 변환 메서드 (가시성 없음)
     public static CategoryResponseDto from(Category category) {
+        return of(category, null); // 기본값으로 isVisible null 처리
+    }
+
+    /**
+     * ✅ QueryDSL constructor projection 용
+     */
+    @QueryProjection
+    public CategoryResponseDto(Long id,
+                               String name,
+                               CategoryType type,
+                               Integer sortOrder,
+                               CategoryScope scope,
+                               String iconName,
+                               boolean isDefault,
+                               boolean isCustom,
+                               Long userId,
+                               LocalDateTime createdAt,
+                               LocalDateTime updatedAt,
+                               Boolean isVisible) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.sortOrder = sortOrder;
+        this.scope = scope;
+        this.iconName = iconName;
+        this.isDefault = isDefault;
+        this.isCustom = isCustom;
+        this.userId = userId;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.isVisible = isVisible;
+    }
+
+
+    // ✅ 가시성 포함 변환 메서드
+    public static CategoryResponseDto of(Category category, Boolean isVisible) {
         return new CategoryResponseDto(
                 category.getId(),
                 category.getName(),
@@ -34,11 +72,12 @@ public class CategoryResponseDto {
                 category.getSortOrder(),
                 category.getScope(),
                 category.getIconName(),
-                category.isDefaultCategory(),    // scope == DEFAULT
-                category.isCustomCategory(),     // scope == CUSTOM
+                category.isDefaultCategory(),
+                category.isCustomCategory(),
                 category.getUser() != null ? category.getUser().getId() : null,
                 category.getCreatedAt(),
-                category.getUpdatedAt()
+                category.getUpdatedAt(),
+                isVisible // null or true/false
         );
     }
 }

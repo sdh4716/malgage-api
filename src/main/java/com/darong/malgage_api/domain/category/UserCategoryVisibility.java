@@ -75,10 +75,6 @@ public class UserCategoryVisibility extends BaseTimeEntity {
     public static UserCategoryVisibility createVisible(User user, Category category) {
         UserCategoryVisibility visibility = new UserCategoryVisibility(user, category, true);
 
-        // 연관관계 편의 메서드 호출
-        user.addCategoryVisibilitySetting(visibility);
-        category.addVisibilitySetting(visibility);
-
         return visibility;
     }
 
@@ -101,9 +97,6 @@ public class UserCategoryVisibility extends BaseTimeEntity {
      * 카테고리 숨김 (기본 카테고리만 가능)
      */
     public void hide() {
-        if (!this.category.isDefaultCategory()) {
-            throw new IllegalStateException("기본 카테고리만 숨길 수 있습니다.");
-        }
         this.isVisible = false;
     }
 

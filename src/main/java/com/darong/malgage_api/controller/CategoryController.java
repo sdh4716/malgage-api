@@ -5,6 +5,7 @@ import com.darong.malgage_api.controller.dto.request.category.CategoryRequestDto
 import com.darong.malgage_api.controller.dto.request.category.CategoryVisibilityRequestDto;
 import com.darong.malgage_api.domain.category.CategoryScope;
 import com.darong.malgage_api.controller.dto.response.CategoryResponseDto;
+import com.darong.malgage_api.domain.category.CategoryType;
 import com.darong.malgage_api.service.CategoryService;
 import com.darong.malgage_api.domain.user.User;
 import jakarta.validation.Valid;
@@ -37,14 +38,15 @@ public class CategoryController {
     }
 
     /**
-     * ✅ CategoryScope 기준 카테고리 조회
+     * ✅ CategoryScope 및 CategoryType 기준 카테고리 조회
      */
     @GetMapping("/scope/{scope}")
-    public ResponseEntity<List<CategoryResponseDto>> getCategoriesByScope(
-            @CurrentUser User user,  // 🎉 사용자 권한 확인
-            @PathVariable CategoryScope scope
+    public ResponseEntity<List<CategoryResponseDto>> getCategoriesByScopeAndType(
+            @CurrentUser User user,
+            @PathVariable CategoryScope scope,
+            @RequestParam(required = false) CategoryType type  // 👈 쿼리 파라미터로 type 추가
     ) {
-        List<CategoryResponseDto> responses = categoryService.getCategoriesByScope(user, scope);
+        List<CategoryResponseDto> responses = categoryService.getCategoriesByScope(user, scope, type);
         return ResponseEntity.ok(responses);
     }
 
@@ -64,6 +66,15 @@ public class CategoryController {
     ) {
         categoryService.updateVisibility(user, dto);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<Void> deleteCustomCategory(
+            @CurrentUser User user,
+            @PathVariable Long categoryId
+    ) {
+        categoryService.deleteCustomCategory(user, categoryId);
+        return ResponseEntity.noContent().build();
     }
 }
 

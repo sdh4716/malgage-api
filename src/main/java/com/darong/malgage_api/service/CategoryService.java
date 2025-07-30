@@ -4,16 +4,16 @@ package com.darong.malgage_api.service;
 import com.darong.malgage_api.auth.exception.CustomAuthException;
 import com.darong.malgage_api.controller.dto.request.category.CategoryRequestDto;
 import com.darong.malgage_api.controller.dto.request.category.CategoryVisibilityRequestDto;
-import com.darong.malgage_api.domain.category.Category;
-import com.darong.malgage_api.domain.category.CategoryScope;
+import com.darong.malgage_api.domain.category.*;
 import com.darong.malgage_api.controller.dto.response.CategoryResponseDto;
-import com.darong.malgage_api.domain.category.UserCategoryVisibility;
 import com.darong.malgage_api.global.exception.NotFoundException;
 import com.darong.malgage_api.repository.category.CategoryQueryRepository;
 import com.darong.malgage_api.repository.category.CategoryRepository;
 import com.darong.malgage_api.repository.category.UserCategoryVisibilityRepository;
 import com.darong.malgage_api.domain.user.User;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,20 +49,12 @@ public class CategoryService {
      * CategoryScope 기준 카테고리 조회
      * 스코프에 따라 적절한 Repository 메서드 선택
      */
-    public List<CategoryResponseDto> getCategoriesByScope(User user, CategoryScope scope) {
-        List<Category> categories;
-
+    public List<CategoryResponseDto> getCategoriesByScope(User user, CategoryScope scope, CategoryType type) {
         if (scope == CategoryScope.DEFAULT) {
-            // 기본 카테고리 조회 - 모든 사용자가 볼 수 있음
-            categories = categoryRepository.findByScopeOrderByTypeAscSortOrderAsc(scope);
+            return categoryQueryRepository.findDefaultCategoriesWithVisibility(user, type);
         } else {
-            // 커스텀 카테고리 조회 - 해당 사용자만 볼 수 있음
-            categories = categoryRepository.findByUserIdAndScopeOrderByTypeAscSortOrderAsc(user.getId(), scope);
+            return categoryQueryRepository.findCustomCategoriesWithVisibility(user, type);
         }
-
-        return categories.stream()
-                .map(CategoryResponseDto::from)
-                .collect(Collectors.toList());
     }
 
     /**
@@ -107,6 +99,22 @@ public class CategoryService {
         }
 
         visibilityRepository.save(visibility);
+    }
+
+    @Transactional
+    public void deleteCustomCategory(User user, Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException("카테고리를 찾을 수 없습니다."));
+
+        if (!category.isCustomCategory()) {
+            throw new IllegalArgumentException("사용자 정의 카테고리만 삭제할 수 있습니다.");
+        }
+
+        if (!category.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("본인의 카테고리만 삭제할 수 있습니다.");
+        }
+
+        categoryRepository.delete(category);
     }
 
 
