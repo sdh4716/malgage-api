@@ -2,7 +2,7 @@ package com.darong.malgage_api.controller;
 
 import com.darong.malgage_api.auth.CurrentUser;
 import com.darong.malgage_api.domain.emotion.EmotionScope;
-import com.darong.malgage_api.controller.dto.response.EmotionResponseDto;
+import com.darong.malgage_api.controller.dto.response.category.EmotionResponseDto;
 import com.darong.malgage_api.service.EmotionService;
 import com.darong.malgage_api.domain.user.User;
 import lombok.RequiredArgsConstructor;

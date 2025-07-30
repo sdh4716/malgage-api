@@ -3,7 +3,7 @@ package com.darong.malgage_api.service;
 
 import com.darong.malgage_api.domain.emotion.Emotion;
 import com.darong.malgage_api.domain.emotion.EmotionScope;
-import com.darong.malgage_api.controller.dto.response.EmotionResponseDto;
+import com.darong.malgage_api.controller.dto.response.category.EmotionResponseDto;
 import com.darong.malgage_api.repository.emotion.EmotionQueryRepository;
 import com.darong.malgage_api.repository.emotion.EmotionRepository;
 import com.darong.malgage_api.repository.emotion.UserEmotionVisibilityRepository;

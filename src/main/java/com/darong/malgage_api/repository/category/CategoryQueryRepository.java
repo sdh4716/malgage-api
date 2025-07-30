@@ -1,13 +1,10 @@
 // domain/category/repository/CategoryQueryRepository.java
 package com.darong.malgage_api.repository.category;
 
-import com.darong.malgage_api.controller.dto.response.CategoryResponseDto;
+import com.darong.malgage_api.controller.dto.response.category.CategoryResponseDto;
 import com.darong.malgage_api.controller.dto.response.QCategoryResponseDto;
 import com.darong.malgage_api.domain.category.*;
 import com.darong.malgage_api.domain.user.User;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

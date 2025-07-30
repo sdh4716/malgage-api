@@ -4,7 +4,7 @@ import com.darong.malgage_api.auth.CurrentUser;
 import com.darong.malgage_api.controller.dto.request.category.CategoryRequestDto;
 import com.darong.malgage_api.controller.dto.request.category.CategoryVisibilityRequestDto;
 import com.darong.malgage_api.domain.category.CategoryScope;
-import com.darong.malgage_api.controller.dto.response.CategoryResponseDto;
+import com.darong.malgage_api.controller.dto.response.category.CategoryResponseDto;
 import com.darong.malgage_api.domain.category.CategoryType;
 import com.darong.malgage_api.service.CategoryService;
 import com.darong.malgage_api.domain.user.User;
@@ -50,6 +50,9 @@ public class CategoryController {
         return ResponseEntity.ok(responses);
     }
 
+    /**
+     * ✅ CustomCategory 생성
+     */
     @PostMapping
     public ResponseEntity<CategoryResponseDto> createCustomCategory(
             @CurrentUser User user,
@@ -59,6 +62,9 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * ✅ 카테고리 가시성 수정
+     */
     @PatchMapping("/visibility")
     public ResponseEntity<Void> updateVisibility(
             @CurrentUser User user,
@@ -68,6 +74,9 @@ public class CategoryController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * ✅ 커스텀 카테고리 삭제
+     */
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Void> deleteCustomCategory(
             @CurrentUser User user,

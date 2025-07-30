@@ -1,11 +1,10 @@
 // domain/category/dto/CategoryResponseDto.java
-package com.darong.malgage_api.controller.dto.response;
+package com.darong.malgage_api.controller.dto.response.category;
 
 import com.darong.malgage_api.domain.category.Category;
 import com.darong.malgage_api.domain.category.CategoryScope;
 import com.darong.malgage_api.domain.category.CategoryType;
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

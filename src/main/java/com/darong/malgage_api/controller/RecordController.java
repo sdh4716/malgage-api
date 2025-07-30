@@ -2,9 +2,11 @@
 package com.darong.malgage_api.controller;
 
 import com.darong.malgage_api.auth.CurrentUser;
+import com.darong.malgage_api.controller.dto.request.RecordRequestDto;
 import com.darong.malgage_api.service.RecordService;
 import com.darong.malgage_api.controller.dto.response.RecordResponseDto;
 import com.darong.malgage_api.domain.user.User;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +26,21 @@ public class RecordController {
      */
     @GetMapping("/by-month")
     public ResponseEntity<List<RecordResponseDto>> getMonthlyRecords(
-            @CurrentUser User user,  // 🎉 깔끔한 코드!
+            @CurrentUser User user,
             @RequestParam int year,
             @RequestParam int month
     ) {
         List<RecordResponseDto> responses = recordService.getMonthlyRecords(user, year, month);
         return ResponseEntity.ok(responses);
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> createRecord(
+            @CurrentUser User user,
+            @RequestBody @Valid RecordRequestDto dto
+    ) {
+        recordService.createRecord(user, dto);
+        return ResponseEntity.ok().build();
     }
 
 }
