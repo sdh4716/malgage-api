@@ -6,6 +6,7 @@ import com.darong.malgage_api.auth.security.UserPrincipal;
 import com.darong.malgage_api.domain.user.User;
 import com.darong.malgage_api.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +16,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
@@ -45,6 +47,8 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
                                   WebDataBinderFactory binderFactory) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        log.debug("authentication = " + String.valueOf(authentication.isAuthenticated()));
 
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new IllegalArgumentException("인증되지 않은 사용자입니다.");

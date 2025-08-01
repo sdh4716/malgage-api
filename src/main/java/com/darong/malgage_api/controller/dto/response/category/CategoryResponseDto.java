@@ -31,37 +31,6 @@ public class CategoryResponseDto {
         return of(category, null); // 기본값으로 isVisible null 처리
     }
 
-    /**
-     * ✅ QueryDSL constructor projection 용
-     */
-    @QueryProjection
-    public CategoryResponseDto(Long id,
-                               String name,
-                               CategoryType type,
-                               Integer sortOrder,
-                               CategoryScope scope,
-                               String iconName,
-                               boolean isDefault,
-                               boolean isCustom,
-                               Long userId,
-                               LocalDateTime createdAt,
-                               LocalDateTime updatedAt,
-                               Boolean isVisible) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.sortOrder = sortOrder;
-        this.scope = scope;
-        this.iconName = iconName;
-        this.isDefault = isDefault;
-        this.isCustom = isCustom;
-        this.userId = userId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.isVisible = isVisible;
-    }
-
-
     // ✅ 가시성 포함 변환 메서드
     public static CategoryResponseDto of(Category category, Boolean isVisible) {
         return new CategoryResponseDto(
@@ -78,5 +47,37 @@ public class CategoryResponseDto {
                 category.getUpdatedAt(),
                 isVisible // null or true/false
         );
+    }
+
+    /**
+     * ✅ QueryDSL constructor projection 용
+     */
+    @QueryProjection
+    public CategoryResponseDto(
+            Long id,
+            String name,
+            CategoryType type,
+            Integer sortOrder,
+            CategoryScope scope,
+            String iconName,
+            boolean isDefault,
+            boolean isCustom,
+            Long userId,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt,
+            Boolean isVisible
+    ) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.sortOrder = sortOrder;
+        this.scope = scope;
+        this.iconName = iconName;
+        this.isDefault = isDefault;
+        this.isCustom = isCustom;
+        this.userId = userId;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.isVisible = isVisible;
     }
 }

@@ -2,7 +2,7 @@
 package com.darong.malgage_api.repository.category;
 
 import com.darong.malgage_api.controller.dto.response.category.CategoryResponseDto;
-import com.darong.malgage_api.controller.dto.response.QCategoryResponseDto;
+import com.darong.malgage_api.controller.dto.response.category.QCategoryResponseDto;
 import com.darong.malgage_api.domain.category.*;
 import com.darong.malgage_api.domain.user.User;
 import com.querydsl.core.types.dsl.Expressions;
@@ -112,5 +112,38 @@ public class CategoryQueryRepository {
                 .orderBy(category.type.asc(), category.sortOrder.asc())
                 .fetch();
     }
+
+    public List<CategoryResponseDto> findVisibleCategoriesByUserAndType(User user, CategoryType type) {
+        QCategory category = QCategory.category;
+        QUserCategoryVisibility visibility = QUserCategoryVisibility.userCategoryVisibility;
+
+        return queryFactory
+                .select(new QCategoryResponseDto(
+                        category.id,
+                        category.name,
+                        category.type,
+                        category.sortOrder,
+                        category.scope,
+                        category.iconName,
+                        category.scope.eq(CategoryScope.DEFAULT),
+                        category.scope.eq(CategoryScope.CUSTOM),
+                        category.user.id,
+                        category.createdAt,
+                        category.updatedAt,
+                        visibility.isVisible.coalesce(true)  // 가시성 설정이 없으면 true 처리
+                ))
+                .from(category)
+                .leftJoin(visibility)
+                .on(visibility.category.id.eq(category.id)
+                        .and(visibility.user.id.eq(user.getId())))
+                .where(
+                        category.type.eq(type),
+                        visibility.isVisible.isNull().or(visibility.isVisible.isTrue())  // ← 핵심 조건
+                )
+                .orderBy(category.sortOrder.asc())
+                .fetch();
+    }
+
+
 
 }

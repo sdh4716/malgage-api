@@ -4,21 +4,17 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.darong.malgage_api.auth.exception.CustomAuthException;
-import com.darong.malgage_api.auth.exception.TokenExpiredExceptionCustom;
-import com.darong.malgage_api.auth.exception.TokenInvalidException;
 import com.darong.malgage_api.auth.security.UserPrincipal;
 import com.darong.malgage_api.domain.user.User;
 import com.darong.malgage_api.domain.user.repository.UserRepository;
+import com.darong.malgage_api.global.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.Date;
 
 @Component
@@ -68,27 +64,6 @@ public class JwtProvider {
         }
     }
 
-
-    /**
-     * AccessToken 전용 유효성 확인
-     */
-    public void validateAccessToken(String token) {
-        DecodedJWT jwt = getDecodedJWT(token);
-        if (!"AccessToken".equals(jwt.getSubject())) {
-            throw new TokenInvalidException("AccessToken 형식이 아닙니다.");
-        }
-    }
-
-    /**
-     * RefreshToken 전용 유효성 확인
-     */
-    public void validateRefreshToken(String token) {
-        DecodedJWT jwt = getDecodedJWT(token);
-        if (!"RefreshToken".equals(jwt.getSubject())) {
-            throw new TokenInvalidException("RefreshToken 형식이 아닙니다.");
-        }
-    }
-
     public String extractEmail(String token) {
         return getDecodedJWT(token).getClaim("email").asString();
     }
@@ -103,7 +78,7 @@ public class JwtProvider {
     public Authentication getAuthentication(String accessToken) {
         String email = extractEmail(accessToken);
         User userEntity = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomAuthException("유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new UnauthorizedException("유저를 찾을 수 없습니다."));
 
         UserPrincipal userPrincipal = new UserPrincipal(userEntity);
 

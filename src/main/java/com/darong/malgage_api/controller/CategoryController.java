@@ -1,7 +1,7 @@
 package com.darong.malgage_api.controller;
 
 import com.darong.malgage_api.auth.CurrentUser;
-import com.darong.malgage_api.controller.dto.request.category.CategoryRequestDto;
+import com.darong.malgage_api.controller.dto.request.category.CategorySaveRequestDto;
 import com.darong.malgage_api.controller.dto.request.category.CategoryVisibilityRequestDto;
 import com.darong.malgage_api.domain.category.CategoryScope;
 import com.darong.malgage_api.controller.dto.response.category.CategoryResponseDto;
@@ -10,6 +10,7 @@ import com.darong.malgage_api.service.CategoryService;
 import com.darong.malgage_api.domain.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Parameter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +40,9 @@ public class CategoryController {
 
     /**
      * ✅ CategoryScope 및 CategoryType 기준 카테고리 조회
+     * @param user 현재 로그인 된 사용자
+     * @param scope (default/custom)
+     * @param type 카테고리 타입 (income/expense)
      */
     @GetMapping("/scope/{scope}")
     public ResponseEntity<List<CategoryResponseDto>> getCategoriesByScopeAndType(
@@ -51,12 +55,29 @@ public class CategoryController {
     }
 
     /**
+     * ✅ 사용자가 visible=true로 설정한 카테고리 목록 조회
+     * @param user 현재 로그인 된 사용자
+     * @param type 카테고리 타입 (income/expense)
+     */
+    @GetMapping("/visible")
+    public ResponseEntity<List<CategoryResponseDto>> getVisibleCategories(
+            @CurrentUser User user,
+            @RequestParam String type
+    ) {
+        CategoryType categoryType = CategoryType.valueOf(type.toUpperCase()); // 문자열을 enum으로 변환
+        List<CategoryResponseDto> categories = categoryService.getVisibleCategories(user, categoryType);
+        return ResponseEntity.ok(categories);
+    }
+
+    /**
      * ✅ CustomCategory 생성
+     * @param user 현재 로그인 된 사용자
+     * @param dto 카테고리 저장 전용 request dto
      */
     @PostMapping
     public ResponseEntity<CategoryResponseDto> createCustomCategory(
             @CurrentUser User user,
-            @Valid @RequestBody CategoryRequestDto dto
+            @Valid @RequestBody CategorySaveRequestDto dto
     ) {
         CategoryResponseDto response = categoryService.createCustomCategory(user, dto);
         return ResponseEntity.ok(response);
@@ -64,6 +85,8 @@ public class CategoryController {
 
     /**
      * ✅ 카테고리 가시성 수정
+     * @param user 현재 로그인 된 사용자
+     * @param dto 카테고리 가시성 수정 전용 request dto
      */
     @PatchMapping("/visibility")
     public ResponseEntity<Void> updateVisibility(

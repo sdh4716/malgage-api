@@ -3,6 +3,8 @@ package com.darong.malgage_api.auth.jwt;
 // JWT 필터는 요청당 1회만 실행되어야 하므로 OncePerRequestFilter 상속
 
 import com.darong.malgage_api.auth.util.TokenUtil;
+import com.darong.malgage_api.global.exception.NotFoundException;
+import com.darong.malgage_api.global.exception.UnauthorizedException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String uri = request.getRequestURI();
 
-        // ❗ 인증이 필요 없는 API는 필터 건너뜀
+        // 인증 예외 처리할 URI 제외
         if (isExcluded(uri)) {
             filterChain.doFilter(request, response);
             return;
@@ -57,20 +59,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = TokenUtil.resolveToken(request);
 
         try {
-            if (token != null && jwtProvider.validateToken(token)) {
-                SecurityContextHolder.getContext().setAuthentication(jwtProvider.getAuthentication(token));
+            if (token == null) {
+                throw new UnauthorizedException("AccessToken이 누락되었습니다.");
             }
-        } catch (JwtException | IllegalArgumentException e) {
-            // 로그 남기고
+
+            if (!jwtProvider.validateToken(token)) {
+                throw new UnauthorizedException("AccessToken이 유효하지 않습니다.");
+            }
+
+            SecurityContextHolder.getContext().setAuthentication(jwtProvider.getAuthentication(token));
+        } catch (JwtException | UnauthorizedException e) {
             log.warn("❗ JWT 인증 실패: {}", e.getMessage());
-
-            // 필요 시 클라이언트에 명확한 응답 반환 (401 Unauthorized)
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write("{\"message\": \"유효하지 않은 토큰입니다.\"}");
-            return;
+            throw e; // ✅ 전역 @RestControllerAdvice에서 처리
         }
-
 
         filterChain.doFilter(request, response);
     }

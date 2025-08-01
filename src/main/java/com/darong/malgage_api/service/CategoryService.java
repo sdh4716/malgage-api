@@ -1,8 +1,7 @@
 // domain/category/service/CategoryService.java
 package com.darong.malgage_api.service;
 
-import com.darong.malgage_api.auth.exception.CustomAuthException;
-import com.darong.malgage_api.controller.dto.request.category.CategoryRequestDto;
+import com.darong.malgage_api.controller.dto.request.category.CategorySaveRequestDto;
 import com.darong.malgage_api.controller.dto.request.category.CategoryVisibilityRequestDto;
 import com.darong.malgage_api.domain.category.*;
 import com.darong.malgage_api.controller.dto.response.category.CategoryResponseDto;
@@ -56,11 +55,15 @@ public class CategoryService {
         }
     }
 
+    public List<CategoryResponseDto> getVisibleCategories(User user, CategoryType type) {
+        return categoryQueryRepository.findVisibleCategoriesByUserAndType(user, type);
+    }
+
     /**
      * 카테고리 등록
      */
     @Transactional
-    public CategoryResponseDto createCustomCategory(User user, CategoryRequestDto dto) {
+    public CategoryResponseDto createCustomCategory(User user, CategorySaveRequestDto dto) {
         Category category = Category.createCustom(
                 dto.getName(),
                 dto.getType(),
@@ -83,7 +86,7 @@ public class CategoryService {
 
         // 본인이 소유하거나 기본 카테고리인 경우만 허용
         if (category.isCustomCategory() && !category.belongsToUser(user.getId())) {
-            throw new CustomAuthException("해당 카테고리에 대한 권한이 없습니다.");
+            throw new AccessDeniedException("해당 카테고리에 대한 권한이 없습니다.");
         }
 
         UserCategoryVisibility visibility = visibilityRepository.findByUser_IdAndCategory_Id(user.getId(), dto.getCategoryId())

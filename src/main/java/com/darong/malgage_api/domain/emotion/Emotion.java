@@ -92,9 +92,6 @@ public class Emotion extends BaseTimeEntity {
         validateUser(user);
         Emotion emotion = new Emotion(name, iconName, sortOrder, EmotionScope.CUSTOM, user);
 
-        // 연관관계 편의 메서드 호출
-        user.addCustomEmotion(emotion);
-
         return emotion;
     }
 

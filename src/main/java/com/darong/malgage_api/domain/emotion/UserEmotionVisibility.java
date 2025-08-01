@@ -67,10 +67,6 @@ public class UserEmotionVisibility extends BaseTimeEntity {
     public static UserEmotionVisibility createVisible(User user, Emotion emotion) {
         UserEmotionVisibility visibility = new UserEmotionVisibility(user, emotion, true);
 
-        // 연관관계 편의 메서드 호출
-        user.addEmotionVisibilitySetting(visibility);
-        emotion.addVisibilitySetting(visibility);
-
         return visibility;
     }
 
@@ -90,12 +86,9 @@ public class UserEmotionVisibility extends BaseTimeEntity {
     // ===== 비즈니스 로직 메서드 =====
 
     /**
-     * 감정 숨김 (기본 감정만 가능)
+     * 감정 숨김
      */
     public void hide() {
-        if (!this.emotion.isDefaultEmotion()) {
-            throw new IllegalStateException("기본 감정만 숨길 수 있습니다.");
-        }
         this.isVisible = false;
     }
 
