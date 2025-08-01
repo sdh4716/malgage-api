@@ -9,6 +9,7 @@ import com.darong.malgage_api.domain.record.Record;
 import com.darong.malgage_api.global.exception.NotFoundException;
 import com.darong.malgage_api.repository.category.CategoryRepository;
 import com.darong.malgage_api.repository.emotion.EmotionRepository;
+import com.darong.malgage_api.repository.record.RecordQueryRepository;
 import com.darong.malgage_api.repository.record.RecordRepository;
 import com.darong.malgage_api.domain.user.User;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public class RecordService {
 
     private final RecordRepository recordRepository;
+    private final RecordQueryRepository recordQueryRepository;
     private final CategoryRepository categoryRepository;
     private final EmotionRepository emotionRepository;
 
@@ -38,7 +40,7 @@ public class RecordService {
         int lastDay = startDate.toLocalDate().lengthOfMonth();
         LocalDateTime endDate = LocalDateTime.of(year, month, lastDay, 23, 59, 59);
 
-        List<Record> records = recordRepository.findByUserAndDateBetween(user, startDate, endDate);
+        List<Record> records = recordQueryRepository.findWithCategoryAndEmotionByUserAndDateBetween(user, startDate, endDate);
         return records.stream()
                 .map(RecordResponseDto::from)
                 .collect(Collectors.toList());
