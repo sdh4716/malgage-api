@@ -1,4 +1,4 @@
-package com.darong.malgage_api.controller.dto.request;
+package com.darong.malgage_api.controller.dto.request.record;
 
 import com.darong.malgage_api.domain.record.*;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class RecordRequestDto {
+public class RecordSaveRequestDto {
     private int amount;
     private RecordType type;
     private LocalDateTime date;

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmotionRequestDto {
+public class EmotionSaveRequestDto {
 
     @NotBlank(message = "감정명은 필수입니다.")
     @Size(max = 50, message = "감정명은 50자를 초과할 수 없습니다.")

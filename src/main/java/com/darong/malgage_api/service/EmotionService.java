@@ -1,7 +1,6 @@
 package com.darong.malgage_api.service;
 
-import com.darong.malgage_api.controller.dto.request.category.CategoryVisibilityRequestDto;
-import com.darong.malgage_api.controller.dto.request.emotion.EmotionRequestDto;
+import com.darong.malgage_api.controller.dto.request.emotion.EmotionSaveRequestDto;
 import com.darong.malgage_api.controller.dto.request.emotion.EmotionVisibilityRequestDto;
 import com.darong.malgage_api.domain.emotion.Emotion;
 import com.darong.malgage_api.domain.emotion.EmotionScope;
@@ -63,7 +62,7 @@ public class EmotionService {
      * 감정 등록
      */
     @Transactional
-    public EmotionResponseDto createCustomEmotion(User user, EmotionRequestDto dto) {
+    public EmotionResponseDto createCustomEmotion(User user, EmotionSaveRequestDto dto) {
         Emotion emotion = Emotion.createCustom(
                 dto.getName(),
                 dto.getIconName(),

@@ -1,11 +1,8 @@
 package com.darong.malgage_api.controller;
 
 import com.darong.malgage_api.auth.CurrentUser;
-import com.darong.malgage_api.controller.dto.request.category.CategoryVisibilityRequestDto;
-import com.darong.malgage_api.controller.dto.request.emotion.EmotionRequestDto;
+import com.darong.malgage_api.controller.dto.request.emotion.EmotionSaveRequestDto;
 import com.darong.malgage_api.controller.dto.request.emotion.EmotionVisibilityRequestDto;
-import com.darong.malgage_api.controller.dto.response.category.CategoryResponseDto;
-import com.darong.malgage_api.domain.category.CategoryType;
 import com.darong.malgage_api.domain.emotion.EmotionScope;
 import com.darong.malgage_api.controller.dto.response.emotion.EmotionResponseDto;
 import com.darong.malgage_api.service.EmotionService;
@@ -66,7 +63,7 @@ public class EmotionController {
     @PostMapping
     public ResponseEntity<EmotionResponseDto> createCustomEmotion(
             @CurrentUser User user,
-            @Valid @RequestBody EmotionRequestDto dto
+            @Valid @RequestBody EmotionSaveRequestDto dto
     ) {
         EmotionResponseDto response = emotionService.createCustomEmotion(user, dto);
         return ResponseEntity.ok(response);

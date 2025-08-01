@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 public class RecordResponseDto {
     private Long id;
     private int amount;
-    private String category;
-    private String emotion;
+    private Long categoryId;
+    private Long emotionId;
     private LocalDateTime date;
     private String type;
     private String paymentMethod;
@@ -26,8 +26,8 @@ public class RecordResponseDto {
         return RecordResponseDto.builder()
                 .id(record.getId())
                 .amount(record.getAmount())
-                .category(record.getCategory().getName())
-                .emotion(record.getEmotion().getName())
+                .categoryId(record.getCategory().getId())
+                .emotionId(record.getEmotion().getId())
                 .date(record.getDate())
                 .type(record.getType().toString())
                 .paymentMethod(record.getPaymentMethod().toString())

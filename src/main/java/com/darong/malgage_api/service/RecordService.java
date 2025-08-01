@@ -1,7 +1,7 @@
 // domain/record/RecordService.java
 package com.darong.malgage_api.service;
 
-import com.darong.malgage_api.controller.dto.request.RecordRequestDto;
+import com.darong.malgage_api.controller.dto.request.record.RecordSaveRequestDto;
 import com.darong.malgage_api.controller.dto.response.RecordResponseDto;
 import com.darong.malgage_api.domain.category.Category;
 import com.darong.malgage_api.domain.emotion.Emotion;
@@ -45,7 +45,7 @@ public class RecordService {
     }
 
     @Transactional
-    public void createRecord(User user, RecordRequestDto dto) {
+    public void createRecord(User user, RecordSaveRequestDto dto) {
         // OSIV false 환경 → 직접 엔티티를 영속화해서 조회
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new NotFoundException("카테고리를 찾을 수 없습니다."));
