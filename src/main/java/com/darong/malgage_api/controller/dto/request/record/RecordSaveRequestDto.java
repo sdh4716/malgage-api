@@ -1,6 +1,7 @@
 package com.darong.malgage_api.controller.dto.request.record;
 
 import com.darong.malgage_api.domain.record.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -13,8 +14,9 @@ public class RecordSaveRequestDto {
     private Long categoryId;
     private Long emotionId;
     private PaymentMethod paymentMethod;
+    @JsonProperty("isInstallment")
     private boolean isInstallment;
-    private int installmentMonth;
+    private int installmentMonths;
     private String memo;
 
 }

@@ -8,11 +8,13 @@ import com.darong.malgage_api.controller.dto.response.RecordResponseDto;
 import com.darong.malgage_api.domain.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/records")
 @RequiredArgsConstructor
@@ -39,6 +41,9 @@ public class RecordController {
             @CurrentUser User user,
             @RequestBody @Valid RecordSaveRequestDto dto
     ) {
+
+        log.info("isInstallment = {}", String.valueOf(dto.isInstallment()));
+        log.info("installmentMonth = {}", String.valueOf(dto.getInstallmentMonths()));
         recordService.createRecord(user, dto);
         return ResponseEntity.ok().build();
     }

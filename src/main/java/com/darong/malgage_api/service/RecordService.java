@@ -63,7 +63,7 @@ public class RecordService {
                     emotion,
                     dto.getPaymentMethod(),
                     dto.isInstallment(),
-                    dto.getInstallmentMonth(),
+                    dto.getInstallmentMonths(),
                     dto.getMemo(),
                     user
                 );

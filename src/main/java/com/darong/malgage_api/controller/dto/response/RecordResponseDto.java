@@ -1,6 +1,7 @@
 package com.darong.malgage_api.controller.dto.response;
 
 import com.darong.malgage_api.domain.record.Record;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,8 +23,9 @@ public class RecordResponseDto {
     private LocalDateTime date;
     private String type;
     private String paymentMethod;
+    @JsonProperty("isInstallment")
     private boolean isInstallment;
-    private int installmentMonth;
+    private int installmentMonths;
     private String memo;
 
     public static RecordResponseDto from(Record record) {
@@ -40,7 +42,7 @@ public class RecordResponseDto {
                 .type(record.getType().toString())
                 .paymentMethod(record.getPaymentMethod().toString())
                 .isInstallment(record.getIsInstallment())
-                .installmentMonth(record.getInstallmentMonths())
+                .installmentMonths(record.getInstallmentMonths())
                 .memo(record.getMemo())
                 .build();
     }
