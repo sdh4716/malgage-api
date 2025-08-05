@@ -26,7 +26,7 @@ jobs:
 
       - name: SSH and deploy
         run: |
-          ssh ec2-user@13.239.64.156 << 'EOF'
+          ssh ec2-user@16.176.179.146 << 'EOF'
             cd ~/malgage-api
             git pull origin main
             ./gradlew build -x test
