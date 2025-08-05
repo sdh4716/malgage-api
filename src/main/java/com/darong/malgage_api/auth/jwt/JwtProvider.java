@@ -26,6 +26,12 @@ public class JwtProvider {
     @Value("${jwt.secret}")
     private String secret;
 
+    @Value("${jwt.access-token-expiration-minutes}")
+    private long accessTokenExpirationMinutes;
+
+    @Value("${jwt.refresh-token-expiration-days}")
+    private long refreshTokenExpirationDays;
+
     private Algorithm algorithm() {
         return Algorithm.HMAC256(secret);
     }
@@ -39,7 +45,7 @@ public class JwtProvider {
                 .withSubject("AccessToken")
                 .withClaim("email", email)
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // 30분
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * accessTokenExpirationMinutes)) // 30분
                 .sign(algorithm());
     }
 
@@ -47,7 +53,7 @@ public class JwtProvider {
         return JWT.create()
                 .withSubject("RefreshToken")
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 14)) // 14일
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * refreshTokenExpirationDays)) // 14일
                 .sign(algorithm());
     }
 
