@@ -1,0 +1,37 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy malgage-api to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_KEY_MALGAGE }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Add EC2 to known_hosts
+        run: |
+          echo "${{ secrets.EC2_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+
+      - name: SSH and deploy
+        run: |
+          ssh ec2-user@13.239.64.156 << 'EOF'
+            cd ~/malgage-api
+            git pull origin main
+            ./gradlew build -x test
+            docker stop malgage-app || true
+            docker rm malgage-app || true
+            docker build -t malgage-app .
+            docker run -d --name malgage-app -p 8080:8080 malgage-app
+          EOF
