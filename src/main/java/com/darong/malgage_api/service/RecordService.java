@@ -2,7 +2,7 @@
 package com.darong.malgage_api.service;
 
 import com.darong.malgage_api.controller.dto.request.record.RecordSaveRequestDto;
-import com.darong.malgage_api.controller.dto.response.RecordResponseDto;
+import com.darong.malgage_api.controller.dto.response.record.RecordResponseDto;
 import com.darong.malgage_api.domain.category.Category;
 import com.darong.malgage_api.domain.emotion.Emotion;
 import com.darong.malgage_api.domain.record.Record;

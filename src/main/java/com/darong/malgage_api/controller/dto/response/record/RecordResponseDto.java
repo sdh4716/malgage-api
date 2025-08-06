@@ -1,4 +1,4 @@
-package com.darong.malgage_api.controller.dto.response;
+package com.darong.malgage_api.controller.dto.response.record;
 
 import com.darong.malgage_api.domain.record.Record;
 import com.fasterxml.jackson.annotation.JsonProperty;

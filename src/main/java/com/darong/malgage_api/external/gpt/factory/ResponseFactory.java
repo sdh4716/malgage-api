@@ -1,7 +1,7 @@
 package com.darong.malgage_api.external.gpt.factory;
 
-import com.darong.malgage_api.controller.dto.response.MultipleRecordAnalysisResponse;
-import com.darong.malgage_api.controller.dto.response.RecordAnalysisResponse;
+import com.darong.malgage_api.controller.dto.response.record.MultipleRecordAnalysisResponse;
+import com.darong.malgage_api.controller.dto.response.record.RecordAnalysisResponse;
 
 import java.util.List;
 

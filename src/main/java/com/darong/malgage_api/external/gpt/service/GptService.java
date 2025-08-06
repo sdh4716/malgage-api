@@ -1,10 +1,10 @@
 package com.darong.malgage_api.external.gpt.service;
 
-import com.darong.malgage_api.controller.dto.response.MultipleRecordAnalysisResponse;
+import com.darong.malgage_api.controller.dto.response.record.MultipleRecordAnalysisResponse;
 import com.darong.malgage_api.external.gpt.dto.OpenAiMessage;
 import com.darong.malgage_api.external.gpt.dto.OpenAiRequest;
 import com.darong.malgage_api.external.gpt.dto.OpenAiResponse;
-import com.darong.malgage_api.controller.dto.response.RecordAnalysisResponse;
+import com.darong.malgage_api.controller.dto.response.record.RecordAnalysisResponse;
 import com.darong.malgage_api.global.config.OpenAiConfig;
 import com.darong.malgage_api.global.constants.PromptConstants;
 import com.darong.malgage_api.external.gpt.exception.OpenAiApiException;

@@ -1,4 +1,4 @@
-package com.darong.malgage_api.controller.dto.response;
+package com.darong.malgage_api.controller.dto.response.record;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

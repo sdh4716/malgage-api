@@ -1,6 +1,6 @@
 package com.darong.malgage_api.external.gpt.service;
 
-import com.darong.malgage_api.controller.dto.response.RecordAnalysisResponse;
+import com.darong.malgage_api.controller.dto.response.record.RecordAnalysisResponse;
 import com.darong.malgage_api.external.gpt.exception.GptResponseParsingException;
 import com.darong.malgage_api.external.gpt.util.JsonExtractor;
 import com.fasterxml.jackson.core.JsonProcessingException;

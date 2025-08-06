@@ -1,7 +1,7 @@
 package com.darong.malgage_api.controller;
 
 import com.darong.malgage_api.controller.dto.request.AnalysisRequest;
-import com.darong.malgage_api.controller.dto.response.MultipleRecordAnalysisResponse;
+import com.darong.malgage_api.controller.dto.response.record.MultipleRecordAnalysisResponse;
 import com.darong.malgage_api.external.gpt.service.GptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
