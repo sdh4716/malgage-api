@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(indexes = {
@@ -70,6 +72,10 @@ public class Record extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "record")
+    private List<InstallmentSchedule> installmentSchedules = new ArrayList<>();
+
 
     // ===== private 생성자 =====
     private Record(Integer amount, RecordType type, LocalDateTime date, Category category,
