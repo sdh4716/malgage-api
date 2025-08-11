@@ -4,7 +4,7 @@ package com.darong.malgage_api.controller;
 import com.darong.malgage_api.auth.CurrentUser;
 import com.darong.malgage_api.controller.dto.request.record.RecordSaveRequestDto;
 import com.darong.malgage_api.service.RecordService;
-import com.darong.malgage_api.controller.dto.response.RecordResponseDto;
+import com.darong.malgage_api.controller.dto.response.record.RecordResponseDto;
 import com.darong.malgage_api.domain.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
