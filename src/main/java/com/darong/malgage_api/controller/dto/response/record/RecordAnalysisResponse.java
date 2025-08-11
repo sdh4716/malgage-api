@@ -6,21 +6,26 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// RecordAnalysisResponse DTO 클래스
+/**
+ * GPT 분석 결과의 단일 거래 DTO
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecordAnalysisResponse {
-    private boolean success;
-    private String type;              // "income" or "expense"
-    private Long amount;              // 금액
-    private String description;       // 설명
-    private String category;          // 카테고리
-    private String paymentMethod;     // 결제수단
-    private String emotion;           // 감정
+
+    private String type;               // "income" or "expense"
+    private Long amount;               // 금액 (null 가능)
+    private String description;        // 설명
+
+    private Long categoryId;           // 카테고리 ID (null 가능)
+    private String paymentMethod;      // 결제수단 (PaymentMethod Enum 값)
+
+    private Long emotionId;            // 감정 ID (null 가능)
+
     @JsonProperty("isInstallment")
-    private boolean isInstallment;    // 할부 여부
-    private int installmentMonths;    // 할부 개월수
-    private String errorMessage;      // 오류 메시지
+    private Boolean isInstallment;     // 할부 여부 (null 가능)
+
+    private Integer installmentMonths; // 할부 개월수 (null 가능)
 }

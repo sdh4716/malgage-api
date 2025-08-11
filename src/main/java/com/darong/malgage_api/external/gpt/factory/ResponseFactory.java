@@ -35,18 +35,17 @@ public class ResponseFactory {
                 .build();
     }
 
+    // ✅ static 메서드로 변경 & 필드 구조 맞춤
     private static RecordAnalysisResponse createErrorRecord(String description, String errorMessage) {
         return RecordAnalysisResponse.builder()
-                .success(false)
                 .type("expense")
                 .amount(0L)
                 .description(description)
-                .category("기타")
-                .paymentMethod("신용카드")
-                .emotion("보통")
+                .categoryId(null)     // 매칭 실패 → null
+                .paymentMethod("CREDIT_CARD") // Enum 값 문자열
+                .emotionId(null)      // 매칭 실패 → null
                 .isInstallment(false)
                 .installmentMonths(0)
-                .errorMessage(errorMessage)
                 .build();
     }
 

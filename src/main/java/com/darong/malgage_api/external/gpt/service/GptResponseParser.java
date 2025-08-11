@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 @Component
 @RequiredArgsConstructor
@@ -22,23 +23,16 @@ public class GptResponseParser {
 
     public List<RecordAnalysisResponse> parseToRecords(String gptResponse) {
         try {
-            String jsonOnly = extractJsonFromResponse(gptResponse);
+            String jsonOnly = new JsonExtractor(gptResponse).extract();
             validateJson(jsonOnly);
 
             JsonNode rootNode = objectMapper.readTree(jsonOnly);
-            log.info("JSON 파싱 성공, 노드 타입: {}", rootNode.getNodeType());
-
             return parseJsonNode(rootNode);
 
         } catch (Exception e) {
             log.error("GPT 응답 파싱 중 오류 발생", e);
             throw new GptResponseParsingException("응답 파싱 실패: " + gptResponse, e);
         }
-    }
-
-    private String extractJsonFromResponse(String response) {
-        JsonExtractor extractor = new JsonExtractor(response);
-        return extractor.extract();
     }
 
     private void validateJson(String json) {
@@ -48,43 +42,30 @@ public class GptResponseParser {
     }
 
     private List<RecordAnalysisResponse> parseJsonNode(JsonNode rootNode) throws JsonProcessingException {
-        List<RecordAnalysisResponse> records = new ArrayList<>();
-
         if (rootNode.isArray()) {
-            log.info("배열 형태 응답, 배열 크기: {}", rootNode.size());
-            records.addAll(parseArrayNode(rootNode));
+            return parseArrayNode(rootNode);
         } else if (rootNode.isObject()) {
-            log.info("단일 객체 형태 응답");
-            records.add(parseObjectNode(rootNode));
-        } else {
-            throw new GptResponseParsingException("예상하지 못한 JSON 형태: " + rootNode.getNodeType());
+            return List.of(parseObjectNode(rootNode));
         }
-
-        log.info("파싱 완료, 총 {} 개의 레코드 생성", records.size());
-        return records;
+        throw new GptResponseParsingException("예상하지 못한 JSON 형태: " + rootNode.getNodeType());
     }
 
     private List<RecordAnalysisResponse> parseArrayNode(JsonNode arrayNode) throws JsonProcessingException {
         List<RecordAnalysisResponse> records = new ArrayList<>();
-
-        for (int i = 0; i < arrayNode.size(); i++) {
-            JsonNode node = arrayNode.get(i);
-            log.info("배열 요소 [{}]: {}", i, node.toString());
-
-            RecordAnalysisResponse record = parseObjectNode(node);
-            records.add(record);
-
-            log.info("파싱된 레코드 [{}]: type={}, amount={}, isInstallment={}",
-                    i, record.getType(), record.getAmount(), record.isInstallment());
+        for (JsonNode node : arrayNode) {
+            records.add(parseObjectNode(node));
         }
-
         return records;
     }
 
     private RecordAnalysisResponse parseObjectNode(JsonNode node) throws JsonProcessingException {
-        String nodeJson = objectMapper.writeValueAsString(node);
-        log.info("노드 JSON 문자열: {}", nodeJson);
+        return objectMapper.readValue(objectMapper.writeValueAsString(node), RecordAnalysisResponse.class);
+    }
 
-        return objectMapper.readValue(nodeJson, RecordAnalysisResponse.class);
+    private void setNullIfMissing(JsonNode node, String field, BiConsumer<Long, Void> setter) {
+        if (!node.has(field) || node.get(field).isNull()) {
+            log.debug("{} 없음 → null 처리", field);
+            setter.accept(null, null);
+        }
     }
 }

@@ -1,7 +1,9 @@
 package com.darong.malgage_api.controller;
 
+import com.darong.malgage_api.auth.CurrentUser;
 import com.darong.malgage_api.controller.dto.request.AnalysisRequest;
 import com.darong.malgage_api.controller.dto.response.record.MultipleRecordAnalysisResponse;
+import com.darong.malgage_api.domain.user.User;
 import com.darong.malgage_api.external.gpt.service.GptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +25,11 @@ public class GptController {
     }
 
     @PostMapping("/records/analyze")
-    public ResponseEntity<MultipleRecordAnalysisResponse> analyzeText(@RequestBody AnalysisRequest request) {
+    public ResponseEntity<MultipleRecordAnalysisResponse> analyzeText(@RequestBody AnalysisRequest request, @CurrentUser User user) {
         try {
             log.info("기록 분석 요청: {}", request.getText());
 
-            MultipleRecordAnalysisResponse response = gptService.extractRecordInfo(request.getText());
+            MultipleRecordAnalysisResponse response = gptService.extractRecordInfo(user, request.getText());
 
             log.info("분석 결과: 성공={}, 기록수={}", response.isSuccess(), response.getRecordCount());
 
