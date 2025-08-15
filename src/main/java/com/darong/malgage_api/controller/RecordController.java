@@ -2,7 +2,9 @@
 package com.darong.malgage_api.controller;
 
 import com.darong.malgage_api.auth.CurrentUser;
+import com.darong.malgage_api.controller.dto.request.category.CategoryVisibilityRequestDto;
 import com.darong.malgage_api.controller.dto.request.record.RecordSaveRequestDto;
+import com.darong.malgage_api.controller.dto.request.record.RecordUpdateRequestDto;
 import com.darong.malgage_api.service.RecordService;
 import com.darong.malgage_api.controller.dto.response.record.RecordResponseDto;
 import com.darong.malgage_api.domain.user.User;
@@ -21,6 +23,18 @@ import java.util.List;
 public class RecordController {
 
     private final RecordService recordService;
+
+    /**
+     * ✅ 가계부 기록 단건 조회
+     */
+    @GetMapping("/{recordId}")
+    public ResponseEntity<RecordResponseDto> getRecordById(
+            @CurrentUser User user,
+            @PathVariable Long recordId
+    ) {
+        RecordResponseDto response = recordService.getRecordById(user, recordId);
+        return ResponseEntity.ok(response);
+    }
 
     /**
      * ✅ 월별 가계부 기록 조회
@@ -46,6 +60,20 @@ public class RecordController {
         log.info("installmentMonth = {}", String.valueOf(dto.getInstallmentMonths()));
         recordService.createRecord(user, dto);
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * ✅ 가계부 기록 수정
+     * @param user 현재 로그인 된 사용자
+     * @param dto 가계부 기록 수정 전용 request dto
+     */
+    @PatchMapping("/{recordId}")
+    public ResponseEntity<RecordResponseDto> updateRecord(
+            @CurrentUser User user,
+            @RequestBody RecordUpdateRequestDto dto
+    ) {
+        RecordResponseDto updatedRecord = recordService.updateRecord(user, dto);
+        return ResponseEntity.ok(updatedRecord);
     }
 
 }
