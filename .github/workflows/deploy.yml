@@ -22,11 +22,12 @@ jobs:
 
       - name: Add EC2 to known_hosts
         run: |
-          echo "${{ secrets.EC2_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: SSH and deploy
         run: |
-          ssh "${{ secrets.EC2_HOST }}" << 'EOF'
+          ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
             cd ~/malgage-api
             git pull origin main
             ./gradlew build -x test
