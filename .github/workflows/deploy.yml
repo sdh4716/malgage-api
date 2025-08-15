@@ -24,9 +24,13 @@ jobs:
         run: |
           ssh-keyscan -H ${{ secrets.EC2_IP }} >> ~/.ssh/known_hosts
 
-      - name: SSH and deploy
+      - name: SSH optimize & deploy
         run: |
           ssh "${{ secrets.EC2_HOST }}" << 'EOF'
+            echo "🔹 Swap + Gradle 최적화 실행"
+            bash ~/scripts/gradle_build_optimize.sh
+
+            echo "🔹 프로젝트 배포 시작"
             cd ~/malgage-api
             git pull origin main
             ./gradlew build -x test
