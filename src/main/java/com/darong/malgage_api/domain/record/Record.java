@@ -151,6 +151,7 @@ public class Record extends BaseTimeEntity {
         if (memo != null) {
             this.memo = memo;
         }
+
     }
 
     /**

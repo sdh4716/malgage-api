@@ -2,12 +2,14 @@
 package com.darong.malgage_api.service;
 
 import com.darong.malgage_api.controller.dto.request.record.RecordSaveRequestDto;
+import com.darong.malgage_api.controller.dto.request.record.RecordUpdateRequestDto;
 import com.darong.malgage_api.controller.dto.response.record.RecordResponseDto;
 import com.darong.malgage_api.domain.category.Category;
 import com.darong.malgage_api.domain.emotion.Emotion;
 import com.darong.malgage_api.domain.record.InstallmentSchedule;
 import com.darong.malgage_api.domain.record.Record;
 import com.darong.malgage_api.global.exception.NotFoundException;
+import com.darong.malgage_api.global.exception.UnauthorizedException;
 import com.darong.malgage_api.repository.category.CategoryRepository;
 import com.darong.malgage_api.repository.emotion.EmotionRepository;
 import com.darong.malgage_api.repository.record.InstallmentScheduleQueryRepository;
@@ -15,7 +17,9 @@ import com.darong.malgage_api.repository.record.InstallmentScheduleRepository;
 import com.darong.malgage_api.repository.record.RecordQueryRepository;
 import com.darong.malgage_api.repository.record.RecordRepository;
 import com.darong.malgage_api.domain.user.User;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,7 +75,64 @@ public class RecordService {
         }
     }
 
+    @Transactional
+    public RecordResponseDto updateRecord(User user, RecordUpdateRequestDto dto) {
+        Record record = recordRepository.findById(dto.getId())
+                .orElseThrow(() -> new NotFoundException("Record not found"));
 
+        // 🔒 해당 유저의 레코드인지 검증
+        if (!record.belongsToUser(user.getId())) {
+            throw new AccessDeniedException("다른 사용자의 기록은 수정할 수 없습니다.");
+        }
+
+        Category category = null;
+        if (dto.getCategoryId() != null) {
+            category = categoryRepository.findById(dto.getCategoryId())
+                    .orElseThrow(() -> new NotFoundException("Category not found"));
+        }
+
+        Emotion emotion = null;
+        if (dto.getEmotionId() != null) {
+            emotion = emotionRepository.findById(dto.getEmotionId())
+                    .orElseThrow(() -> new NotFoundException("Emotion not found"));
+        }
+
+        // 기존 할부 스케줄 삭제 (수정 전에 항상 제거)
+        installmentScheduleRepository.deleteByRecord(record);
+
+        record.update(
+                dto.getAmount(),
+                dto.getType(),
+                dto.getDate(),
+                category,
+                emotion,
+                dto.getPaymentMethod(),
+                dto.isInstallment(),
+                dto.getInstallmentMonths(),
+                dto.getMemo()
+        );
+
+        // 수정된 값이 할부라면 새 스케줄 생성
+        if (dto.isInstallment()) {
+            List<InstallmentSchedule> schedules = createInstallmentSchedules(record);
+            installmentScheduleRepository.saveAll(schedules);
+        }
+
+        // 수정된 엔티티를 DTO로 변환 후 반환
+        return RecordResponseDto.from(record);
+    }
+
+
+    public RecordResponseDto getRecordById(User user, Long recordId) {
+        Record record = recordRepository.findById(recordId)
+                .orElseThrow(() -> new NotFoundException("Record를 찾을 수 없습니다. id=" + recordId));
+
+        if (!record.belongsToUser(user.getId())) {
+            throw new UnauthorizedException("본인의 기록만 조회할 수 있습니다.");
+        }
+
+        return RecordResponseDto.from(record);
+    }
 
     /**
      * 월별 가계부 기록 조회
@@ -104,9 +165,6 @@ public class RecordService {
 
         return merged;
     }
-
-
-
 
 
     public List<InstallmentSchedule> createInstallmentSchedules(Record record) {

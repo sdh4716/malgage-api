@@ -3,11 +3,14 @@ package com.darong.malgage_api.repository.category;
 
 import com.darong.malgage_api.domain.category.Category;
 import com.darong.malgage_api.domain.category.CategoryScope;
+import com.darong.malgage_api.domain.category.CategoryType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
+
+    boolean existsByNameAndTypeAndScope(String name, CategoryType type, CategoryScope scope);
 
     /**
      * 기본 카테고리만 조회 (타입별, 정렬순서로 정렬)

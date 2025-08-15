@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface EmotionRepository extends JpaRepository<Emotion, Long> {
 
+    boolean existsByNameAndScope(String name, EmotionScope scope);
+
     /**
      * 기본 카테고리만 조회 (타입별, 정렬순서로 정렬)
      */
