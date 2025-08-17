@@ -1,6 +1,6 @@
 package com.darong.malgage_api.controller;
 
-import com.darong.malgage_api.auth.CurrentUser;
+import com.darong.malgage_api.global.security.CurrentUser;
 import com.darong.malgage_api.controller.dto.response.statistics.StatisticsResponseDto;
 import com.darong.malgage_api.domain.statistics.StatisticsPeriod;
 import com.darong.malgage_api.domain.user.User;

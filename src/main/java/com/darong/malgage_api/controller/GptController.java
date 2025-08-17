@@ -1,7 +1,7 @@
 package com.darong.malgage_api.controller;
 
-import com.darong.malgage_api.auth.CurrentUser;
-import com.darong.malgage_api.controller.dto.request.AnalysisRequest;
+import com.darong.malgage_api.global.security.CurrentUser;
+import com.darong.malgage_api.controller.dto.request.record.AnalysisRequest;
 import com.darong.malgage_api.controller.dto.response.record.MultipleRecordAnalysisResponse;
 import com.darong.malgage_api.domain.user.User;
 import com.darong.malgage_api.external.gpt.service.GptService;

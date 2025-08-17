@@ -40,6 +40,9 @@ dependencies {
 	implementation 'com.google.api-client:google-api-client:2.4.1'
 	implementation 'com.google.api-client:google-api-client-gson:2.4.1'
 
+	// apple log-in
+	implementation 'com.nimbusds:nimbus-jose-jwt:9.37' // Apple JWT 검증 (RS256/JWKS)
+
 	// jwt
 	implementation 'com.auth0:java-jwt:4.4.0'
 

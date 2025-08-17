@@ -1,4 +1,4 @@
-package com.darong.malgage_api.auth.util;
+package com.darong.malgage_api.global.util;
 
 import jakarta.servlet.http.HttpServletRequest;
 

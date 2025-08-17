@@ -1,9 +1,8 @@
-package com.darong.malgage_api.auth.jwt;
+package com.darong.malgage_api.global.jwt;
 
 // JWT 필터는 요청당 1회만 실행되어야 하므로 OncePerRequestFilter 상속
 
-import com.darong.malgage_api.auth.util.TokenUtil;
-import com.darong.malgage_api.global.exception.NotFoundException;
+import com.darong.malgage_api.global.util.TokenUtil;
 import com.darong.malgage_api.global.exception.UnauthorizedException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -32,6 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             "/api/auth/validate",
             "/api/auth/reissue-access-token",
             "/api/auth/google-login",
+            "/api/auth/apple-login",
             "/api/auth/logout"
     );
 

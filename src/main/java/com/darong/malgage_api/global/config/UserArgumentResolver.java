@@ -1,8 +1,8 @@
 // global/config/UserArgumentResolver.java
 package com.darong.malgage_api.global.config;
 
-import com.darong.malgage_api.auth.CurrentUser;
-import com.darong.malgage_api.auth.security.UserPrincipal;
+import com.darong.malgage_api.global.security.CurrentUser;
+import com.darong.malgage_api.global.security.UserPrincipal;
 import com.darong.malgage_api.domain.user.User;
 import com.darong.malgage_api.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

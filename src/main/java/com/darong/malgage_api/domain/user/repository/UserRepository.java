@@ -14,6 +14,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * - NPE(NullPointerException) 방지에 유용
      **/
     Optional<User> findByOauthIdAndProvider(String oauthId, AuthProvider provider);
-
-    Optional<User> findByEmail(String email);
 }

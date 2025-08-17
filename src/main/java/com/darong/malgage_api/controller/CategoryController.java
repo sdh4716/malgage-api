@@ -1,6 +1,6 @@
 package com.darong.malgage_api.controller;
 
-import com.darong.malgage_api.auth.CurrentUser;
+import com.darong.malgage_api.global.security.CurrentUser;
 import com.darong.malgage_api.controller.dto.request.category.CategorySaveRequestDto;
 import com.darong.malgage_api.controller.dto.request.category.CategoryVisibilityRequestDto;
 import com.darong.malgage_api.domain.category.CategoryScope;
@@ -10,7 +10,6 @@ import com.darong.malgage_api.service.CategoryService;
 import com.darong.malgage_api.domain.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Parameter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

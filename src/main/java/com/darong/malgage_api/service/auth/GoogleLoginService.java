@@ -1,11 +1,11 @@
-package com.darong.malgage_api.auth.service;
+package com.darong.malgage_api.service.auth;
 
-import com.darong.malgage_api.auth.RefreshToken;
+import com.darong.malgage_api.domain.auth.RefreshToken;
 import com.darong.malgage_api.domain.user.*;
-import com.darong.malgage_api.auth.dto.TokenResponse;
-import com.darong.malgage_api.auth.repository.RefreshTokenRepository;
+import com.darong.malgage_api.controller.dto.response.auth.TokenResponse;
+import com.darong.malgage_api.repository.auth.RefreshTokenRepository;
 import com.darong.malgage_api.domain.user.repository.UserRepository;
-import com.darong.malgage_api.auth.jwt.JwtProvider;
+import com.darong.malgage_api.global.jwt.JwtProvider;
 import com.google.api.client.googleapis.auth.oauth2.*;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory; // ✅ JacksonFactory → GsonFactory로 변경
@@ -39,7 +39,7 @@ public class GoogleLoginService {
                 ));
 
         // Access + Refresh Token 발급
-        String accessToken = jwtProvider.createAccessToken(email);
+        String accessToken = jwtProvider.createAccessToken(email, AuthProvider.GOOGLE, oauthId);
         String refreshToken = jwtProvider.createRefreshToken();
 
         // Refresh Token 저장 또는 갱신

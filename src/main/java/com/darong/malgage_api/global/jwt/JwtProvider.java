@@ -1,11 +1,12 @@
-package com.darong.malgage_api.auth.jwt;
+package com.darong.malgage_api.global.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.darong.malgage_api.auth.security.UserPrincipal;
+import com.darong.malgage_api.domain.user.AuthProvider;
+import com.darong.malgage_api.global.security.UserPrincipal;
 import com.darong.malgage_api.domain.user.User;
 import com.darong.malgage_api.domain.user.repository.UserRepository;
 import com.darong.malgage_api.global.exception.UnauthorizedException;
@@ -40,10 +41,12 @@ public class JwtProvider {
         return JWT.require(algorithm()).build();
     }
 
-    public String createAccessToken(String email) {
+    public String createAccessToken(String email, AuthProvider provider, String oauthId) {
         return JWT.create()
                 .withSubject("AccessToken")
                 .withClaim("email", email)
+                .withClaim("provider", provider.name())
+                .withClaim("oauthId", oauthId)
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * accessTokenExpirationMinutes)) // 30분
                 .sign(algorithm());
@@ -82,8 +85,11 @@ public class JwtProvider {
      * Spring Security 인증 객체 반환
      */
     public Authentication getAuthentication(String accessToken) {
-        String email = extractEmail(accessToken);
-        User userEntity = userRepository.findByEmail(email)
+        DecodedJWT decoded = getDecodedJWT(accessToken);
+        String provider = decoded.getClaim("provider").asString();
+        String oauthId = decoded.getClaim("oauthId").asString();
+
+        User userEntity = userRepository.findByOauthIdAndProvider(oauthId, AuthProvider.valueOf(provider))
                 .orElseThrow(() -> new UnauthorizedException("유저를 찾을 수 없습니다."));
 
         UserPrincipal userPrincipal = new UserPrincipal(userEntity);

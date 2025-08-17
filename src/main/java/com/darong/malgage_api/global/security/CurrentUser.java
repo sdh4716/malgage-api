@@ -1,4 +1,4 @@
-package com.darong.malgage_api.auth;
+package com.darong.malgage_api.global.security;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

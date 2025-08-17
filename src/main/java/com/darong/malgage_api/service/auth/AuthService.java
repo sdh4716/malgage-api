@@ -1,15 +1,14 @@
-package com.darong.malgage_api.auth.service;
+package com.darong.malgage_api.service.auth;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.darong.malgage_api.auth.RefreshToken;
-import com.darong.malgage_api.auth.dto.TokenResponse;
-import com.darong.malgage_api.auth.jwt.JwtProvider;
-import com.darong.malgage_api.auth.repository.RefreshTokenRepository;
+import com.darong.malgage_api.domain.auth.RefreshToken;
+import com.darong.malgage_api.controller.dto.response.auth.TokenResponse;
+import com.darong.malgage_api.global.jwt.JwtProvider;
+import com.darong.malgage_api.repository.auth.RefreshTokenRepository;
 import com.darong.malgage_api.domain.user.User;
 import com.darong.malgage_api.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +46,7 @@ public class AuthService {
         User user = userRepository.findById(savedToken.getUserId())
                 .orElseThrow(() -> new RuntimeException("해당 유저가 존재하지 않습니다."));
 
-        String newAccessToken = jwtProvider.createAccessToken(user.getEmail());
+        String newAccessToken = jwtProvider.createAccessToken(user.getEmail(), user.getProvider(), user.getOauthId());
         String newRefreshToken = jwtProvider.createRefreshToken();
 
         savedToken.updateToken(newRefreshToken);
