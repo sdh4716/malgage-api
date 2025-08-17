@@ -55,8 +55,6 @@ public class RecordController {
             @RequestBody @Valid RecordSaveRequestDto dto
     ) {
 
-        log.info("isInstallment = {}", String.valueOf(dto.isInstallment()));
-        log.info("installmentMonth = {}", String.valueOf(dto.getInstallmentMonths()));
         recordService.createRecord(user, dto);
         return ResponseEntity.ok().build();
     }
@@ -74,5 +72,21 @@ public class RecordController {
         RecordResponseDto updatedRecord = recordService.updateRecord(user, dto);
         return ResponseEntity.ok(updatedRecord);
     }
+
+    /**
+     * ✅ 가계부 기록 수정
+     * @param user 현재 로그인 된 사용자
+     * @param recordId 가계부 기록 삭제용 id
+     */
+    @DeleteMapping("/{recordId}")
+    public ResponseEntity<Void> deleteRecord(
+            @CurrentUser User user,
+            @PathVariable Long recordId
+    ) {
+        recordService.deleteRecord(user, recordId);
+        return ResponseEntity.noContent().build();
+    }
+
+
 
 }

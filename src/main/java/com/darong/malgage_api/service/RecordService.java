@@ -122,6 +122,19 @@ public class RecordService {
         return RecordResponseDto.from(record);
     }
 
+    @Transactional
+    public void deleteRecord(User user, Long recordId) {
+        Record record = recordRepository.findById(recordId)
+                .orElseThrow(() -> new NotFoundException("기록을 찾을 수 없습니다."));
+        
+
+        if (!record.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("본인의 기록만 삭제할 수 있습니다.");
+        }
+
+        recordRepository.delete(record);
+    }
+
 
     public RecordResponseDto getRecordById(User user, Long recordId) {
         Record record = recordRepository.findById(recordId)

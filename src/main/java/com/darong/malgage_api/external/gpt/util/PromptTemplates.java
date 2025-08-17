@@ -29,7 +29,7 @@ public class PromptTemplates {
             - paymentMethod는 반드시 위 Enum 중 하나로 응답 (예: "CREDIT_CARD")
             - "할부/분할/개월" 언급 시 isInstallment=true, 개월수 미상이면 installmentMonths=12
             - "일시불/한번에"면 isInstallment=false 및 installmentMonths=0
-            - 금액은 숫자만(원 단위 추정)
+            - 금액은 숫자만 응답, 만 칠천원은 17,000원 임. 한글 띄워쓰기 유의
             - 최종 응답은 JSON 배열만
             """.formatted(categoryJson, emotionJson, paymentMethodsJson);
     }
