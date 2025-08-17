@@ -19,6 +19,7 @@ import com.darong.malgage_api.repository.record.RecordRepository;
 import com.darong.malgage_api.domain.user.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional(readOnly = true)
 public class RecordService {
 
@@ -46,34 +48,39 @@ public class RecordService {
 
     @Transactional
     public void createRecord(User user, RecordSaveRequestDto dto) {
+        try {
+            Category category = categoryRepository.findById(dto.getCategoryId())
+                    .orElseThrow(() -> new NotFoundException("카테고리를 찾을 수 없습니다."));
 
-        // OSIV false 환경 → 직접 엔티티를 영속화해서 조회
-        Category category = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new NotFoundException("카테고리를 찾을 수 없습니다."));
+            Emotion emotion = emotionRepository.findById(dto.getEmotionId())
+                    .orElseThrow(() -> new NotFoundException("감정을 찾을 수 없습니다."));
 
-        Emotion emotion = emotionRepository.findById(dto.getEmotionId())
-                .orElseThrow(() -> new NotFoundException("감정을 찾을 수 없습니다."));
+            Record record = Record.create(
+                    dto.getAmount(),
+                    dto.getType(),
+                    dto.getDate(),
+                    category,
+                    emotion,
+                    dto.getPaymentMethod(),
+                    dto.isInstallment(),
+                    dto.getInstallmentMonths(),
+                    dto.getMemo(),
+                    user
+            );
 
-        Record record = Record.create(
-                dto.getAmount(),
-                dto.getType(),
-                dto.getDate(),
-                category,
-                emotion,
-                dto.getPaymentMethod(),
-                dto.isInstallment(),
-                dto.getInstallmentMonths(),
-                dto.getMemo(),
-                user
-        );
+            recordRepository.save(record);
 
-        recordRepository.save(record);
+            if (dto.isInstallment()) {
+                List<InstallmentSchedule> schedules = createInstallmentSchedules(record);
+                installmentScheduleRepository.saveAll(schedules);
+            }
 
-        if (dto.isInstallment()) {
-            List<InstallmentSchedule> schedules = createInstallmentSchedules(record);
-            installmentScheduleRepository.saveAll(schedules);
+        } catch (Exception e) {
+            log.error("💥 Record 저장 중 에러 발생: dto={}, userId={}", dto, user.getId(), e);
+            throw e; // 다시 던져서 트랜잭션 롤백 유지
         }
     }
+
 
     @Transactional
     public RecordResponseDto updateRecord(User user, RecordUpdateRequestDto dto) {
