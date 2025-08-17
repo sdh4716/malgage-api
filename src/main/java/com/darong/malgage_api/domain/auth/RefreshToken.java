@@ -1,4 +1,4 @@
-package com.darong.malgage_api.auth;
+package com.darong.malgage_api.domain.auth;
 
 import jakarta.persistence.*;
 import lombok.*;

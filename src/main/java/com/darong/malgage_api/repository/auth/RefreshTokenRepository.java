@@ -1,6 +1,6 @@
-package com.darong.malgage_api.auth.repository;
+package com.darong.malgage_api.repository.auth;
 
-import com.darong.malgage_api.auth.RefreshToken;
+import com.darong.malgage_api.domain.auth.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

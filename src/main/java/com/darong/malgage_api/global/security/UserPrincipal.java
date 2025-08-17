@@ -1,4 +1,4 @@
-package com.darong.malgage_api.auth.security;
+package com.darong.malgage_api.global.security;
 
 import com.darong.malgage_api.domain.user.User;
 

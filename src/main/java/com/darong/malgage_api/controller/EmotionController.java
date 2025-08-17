@@ -1,6 +1,6 @@
 package com.darong.malgage_api.controller;
 
-import com.darong.malgage_api.auth.CurrentUser;
+import com.darong.malgage_api.global.security.CurrentUser;
 import com.darong.malgage_api.controller.dto.request.emotion.EmotionSaveRequestDto;
 import com.darong.malgage_api.controller.dto.request.emotion.EmotionVisibilityRequestDto;
 import com.darong.malgage_api.domain.emotion.EmotionScope;

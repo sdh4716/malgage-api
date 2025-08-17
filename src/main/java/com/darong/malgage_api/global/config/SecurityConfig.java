@@ -1,8 +1,7 @@
 package com.darong.malgage_api.global.config;
 
-import com.darong.malgage_api.auth.jwt.JwtAuthenticationFilter;
-import com.darong.malgage_api.auth.jwt.JwtProvider;
-import com.darong.malgage_api.global.security.CustomAccessDeniedHandler;
+import com.darong.malgage_api.global.jwt.JwtAuthenticationFilter;
+import com.darong.malgage_api.global.jwt.JwtProvider;
 import com.darong.malgage_api.global.security.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;

@@ -1,8 +1,7 @@
 // domain/record/RecordController.java
 package com.darong.malgage_api.controller;
 
-import com.darong.malgage_api.auth.CurrentUser;
-import com.darong.malgage_api.controller.dto.request.category.CategoryVisibilityRequestDto;
+import com.darong.malgage_api.global.security.CurrentUser;
 import com.darong.malgage_api.controller.dto.request.record.RecordSaveRequestDto;
 import com.darong.malgage_api.controller.dto.request.record.RecordUpdateRequestDto;
 import com.darong.malgage_api.service.RecordService;

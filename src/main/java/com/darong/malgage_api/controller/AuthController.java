@@ -1,11 +1,13 @@
-package com.darong.malgage_api.auth.controller;
+package com.darong.malgage_api.controller;
 
-import com.darong.malgage_api.auth.dto.GoogleLoginRequest;
-import com.darong.malgage_api.auth.dto.TokenResponse;
-import com.darong.malgage_api.auth.jwt.JwtProvider;
-import com.darong.malgage_api.auth.service.AuthService;
-import com.darong.malgage_api.auth.service.GoogleLoginService;
-import com.darong.malgage_api.auth.util.TokenUtil;
+import com.darong.malgage_api.controller.dto.request.auth.AppleLoginRequest;
+import com.darong.malgage_api.controller.dto.request.auth.GoogleLoginRequest;
+import com.darong.malgage_api.controller.dto.response.auth.TokenResponse;
+import com.darong.malgage_api.global.jwt.JwtProvider;
+import com.darong.malgage_api.service.auth.AppleLoginService;
+import com.darong.malgage_api.service.auth.AuthService;
+import com.darong.malgage_api.service.auth.GoogleLoginService;
+import com.darong.malgage_api.global.util.TokenUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final GoogleLoginService googleLoginService;
+    private final AppleLoginService appleLoginService;
+
     private final JwtProvider jwtProvider;
     private final AuthService authService;
 
@@ -27,11 +31,16 @@ public class AuthController {
         return ResponseEntity.ok(tokenResponse);
     }
 
+    @PostMapping("/apple-login")
+    public ResponseEntity<?> loginWithApple(@RequestBody AppleLoginRequest request) {
+        TokenResponse tokenResponse = appleLoginService.login(request.getIdToken());
+        return ResponseEntity.ok(tokenResponse);
+    }
+
     // ✅ AccessToken 유효성 검사 API
     @GetMapping("/validate")
     public ResponseEntity<?> validateAccessToken(HttpServletRequest request) {
 
-        System.out.println("validate 탐");
         String accessToken = TokenUtil.resolveToken(request);
         if (accessToken == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("토큰이 없습니다.");

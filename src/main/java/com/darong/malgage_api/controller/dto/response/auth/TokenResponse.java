@@ -1,4 +1,4 @@
-package com.darong.malgage_api.auth.dto;
+package com.darong.malgage_api.controller.dto.response.auth;
 
 import lombok.Getter;
 
