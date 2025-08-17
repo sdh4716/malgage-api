@@ -17,7 +17,7 @@ public class RecordAnalysisResponse {
 
     private String type;               // "income" or "expense"
     private Long amount;               // 금액 (null 가능)
-    private String description;        // 설명
+    private String memo;        // 설명
 
     private Long categoryId;           // 카테고리 ID (null 가능)
     private String paymentMethod;      // 결제수단 (PaymentMethod Enum 값)

@@ -12,10 +12,10 @@ public class PromptTemplates {
             [{
               "type": "income|expense",
               "amount": <number>,
-              "description": <string>,
-              "categoryId": <number|null>,   // 매칭 실패 시 null
+              "memo": <string>,
+              "categoryId": <number>,   // 매칭 실패 시 0
               "paymentMethod": <string>,     // 아래 결제수단 중 하나 (Enum 이름 그대로)
-              "emotionId": <number|null>,    // 매칭 실패 시 null
+              "emotionId": <number>,    // 매칭 실패 시 0
               "isInstallment": <boolean>,
               "installmentMonths": <number>
             }]
@@ -25,7 +25,7 @@ public class PromptTemplates {
             사용 가능한 결제수단(Enum): %s
 
             규칙:
-            - categoryId와 emotionId는 위 목록에서 "정확히 찾을 수 있을 때" 해당 id 사용, 그렇지 않으면 null로 설정
+            - categoryId와 emotionId는 위 목록에서 "정확히 찾을 수 있을 때" 해당 id 사용, 그렇지 않으면 0 반환
             - paymentMethod는 반드시 위 Enum 중 하나로 응답 (예: "CREDIT_CARD")
             - "할부/분할/개월" 언급 시 isInstallment=true, 개월수 미상이면 installmentMonths=12
             - "일시불/한번에"면 isInstallment=false 및 installmentMonths=0

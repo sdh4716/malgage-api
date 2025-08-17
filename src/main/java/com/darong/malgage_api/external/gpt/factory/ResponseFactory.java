@@ -40,7 +40,7 @@ public class ResponseFactory {
         return RecordAnalysisResponse.builder()
                 .type("expense")
                 .amount(0L)
-                .description(description)
+                .memo(description)
                 .categoryId(null)     // 매칭 실패 → null
                 .paymentMethod("CREDIT_CARD") // Enum 값 문자열
                 .emotionId(null)      // 매칭 실패 → null
