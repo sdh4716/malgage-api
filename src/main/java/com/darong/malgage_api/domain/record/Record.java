@@ -207,9 +207,6 @@ public class Record extends BaseTimeEntity {
         if (date == null) {
             throw new IllegalArgumentException("날짜는 필수입니다.");
         }
-        if (date.isAfter(LocalDateTime.now())) {
-            throw new IllegalArgumentException("미래 날짜는 입력할 수 없습니다.");
-        }
     }
 
     private static void validateCategory(Category category) {
