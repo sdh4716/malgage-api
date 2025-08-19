@@ -31,6 +31,12 @@ public class PromptTemplates {
             - "일시불/한번에"면 isInstallment=false 및 installmentMonths=0
             - 금액은 숫자만 응답, 만 칠천원은 17,000원 임. 한글 띄워쓰기 유의
             - 최종 응답은 JSON 배열만
+            
+            메모(memo) 구성 규칙:
+            - 사용자가 말한 "장소/상호/플랫폼/지점/지역" 등의 맥락(예: '스타벅스에서', '강남역 이마트에서', '배달의민족으로')이 있으면 이를 memo에 포함
+            - 품목/상세(예: '아메리카노', '점심', '버스비', '택시')가 있으면 함께 포함
+            - 예: "강남역 스타벅스 아메리카노", "배달의민족 치킨", "이마트 장보기"
+            - 불필요한 조사/감탄사/군더더기는 제거하고 핵심 키워드만 간결하게 기록
             """.formatted(categoryJson, emotionJson, paymentMethodsJson);
     }
 }
