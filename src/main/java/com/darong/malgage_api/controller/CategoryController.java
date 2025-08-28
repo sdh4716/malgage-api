@@ -104,7 +104,7 @@ public class CategoryController {
             @CurrentUser User user,
             @PathVariable Long categoryId
     ) {
-        categoryService.deleteCustomCategory(user, categoryId);
+        categoryService.softDeleteCategory(user, categoryId);
         return ResponseEntity.noContent().build();
     }
 }

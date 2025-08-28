@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * GPT 분석 결과의 단일 거래 DTO
  */
@@ -28,4 +30,5 @@ public class RecordAnalysisResponse {
     private Boolean isInstallment;     // 할부 여부 (null 가능)
 
     private Integer installmentMonths; // 할부 개월수 (null 가능)
+    private LocalDateTime date;
 }

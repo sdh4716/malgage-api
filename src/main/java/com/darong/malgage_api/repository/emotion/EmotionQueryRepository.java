@@ -36,9 +36,8 @@ public class EmotionQueryRepository {
         return queryFactory
                 .selectFrom(emotion)
                 .where(
-                        // 기본 감정는 모든 사용자가 볼 수 있음
+                        emotion.isDeleted.isFalse(),   // ✅ 삭제되지 않은 감정만
                         emotion.scope.eq(EmotionScope.DEFAULT)
-                                // 또는 사용자의 커스텀 감정
                                 .or(emotion.scope.eq(EmotionScope.CUSTOM)
                                         .and(emotion.user.id.eq(userId)))
                 )
@@ -65,14 +64,14 @@ public class EmotionQueryRepository {
                         Expressions.nullExpression(Long.class),
                         emotion.createdAt,
                         emotion.updatedAt,
-                        visibility.isVisible.coalesce(true) // null일 때 기본값 true
+                        visibility.isVisible.coalesce(true)
                 ))
                 .from(emotion)
                 .leftJoin(visibility)
-                // ✅ 엔티티 참조 대신 FK 컬럼으로 직접 조인 (지연 로딩 방지)
-                .on(visibility.emotion.id.eq(emotion.id)    // category 엔티티 접근 대신 id 사용
-                        .and(visibility.user.id.eq(user.getId()))) // user 엔티티 접근 대신 id 사용
+                .on(visibility.emotion.id.eq(emotion.id)
+                        .and(visibility.user.id.eq(user.getId())))
                 .where(
+                        emotion.isDeleted.isFalse(),   // ✅ 추가
                         emotion.scope.eq(EmotionScope.DEFAULT)
                 )
                 .orderBy(emotion.sortOrder.asc())
@@ -90,21 +89,21 @@ public class EmotionQueryRepository {
                         emotion.sortOrder,
                         emotion.scope,
                         emotion.iconName,
-                        Expressions.FALSE, // isDefault = false (커스텀이므로)
-                        Expressions.TRUE,  // isCustom = true
-                        Expressions.constant(user.getId()), // ✅ 상수로 user ID 직접 설정
+                        Expressions.FALSE,
+                        Expressions.TRUE,
+                        Expressions.constant(user.getId()),
                         emotion.createdAt,
                         emotion.updatedAt,
-                        visibility.isVisible.coalesce(true) // 기본값 true
+                        visibility.isVisible.coalesce(true)
                 ))
                 .from(emotion)
                 .leftJoin(visibility)
                 .on(visibility.emotion.id.eq(emotion.id)
                         .and(visibility.user.id.eq(user.getId())))
                 .where(
+                        emotion.isDeleted.isFalse(),   // ✅ 추가
                         emotion.scope.eq(EmotionScope.CUSTOM),
-                        // ✅ FK 컬럼으로 직접 필터링 (Category 테이블의 user_id 컬럼)
-                        emotion.user.id.eq(user.getId()) // 이건 단순 where 조건이라 문제없음
+                        emotion.user.id.eq(user.getId())
                 )
                 .orderBy(emotion.sortOrder.asc())
                 .fetch();
@@ -126,16 +125,18 @@ public class EmotionQueryRepository {
                         emotion.user.id,
                         emotion.createdAt,
                         emotion.updatedAt,
-                        visibility.isVisible.coalesce(true)  // 가시성 설정이 없으면 true 처리
+                        visibility.isVisible.coalesce(true)
                 ))
                 .from(emotion)
                 .leftJoin(visibility)
                 .on(visibility.emotion.id.eq(emotion.id)
                         .and(visibility.user.id.eq(user.getId())))
                 .where(
-                        visibility.isVisible.isNull().or(visibility.isVisible.isTrue())  // ← 핵심 조건
+                        emotion.isDeleted.isFalse(),   // ✅ 추가
+                        visibility.isVisible.isNull().or(visibility.isVisible.isTrue())
                 )
                 .orderBy(emotion.sortOrder.asc())
                 .fetch();
     }
+
 }

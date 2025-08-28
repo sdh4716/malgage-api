@@ -2,6 +2,7 @@ package com.darong.malgage_api.service;
 
 import com.darong.malgage_api.controller.dto.request.emotion.EmotionSaveRequestDto;
 import com.darong.malgage_api.controller.dto.request.emotion.EmotionVisibilityRequestDto;
+import com.darong.malgage_api.domain.category.Category;
 import com.darong.malgage_api.domain.emotion.Emotion;
 import com.darong.malgage_api.domain.emotion.EmotionScope;
 import com.darong.malgage_api.controller.dto.response.emotion.EmotionResponseDto;
@@ -115,6 +116,23 @@ public class EmotionService {
         }
 
         emotionRepository.delete(emotion);
+    }
+
+    /**
+     * Custom 카테고리 삭제
+     * 사용자가 record에서 해당 카테고리를 사용했을 수도 있기 때문에
+     * 실제 삭제가 아닌 soft delete
+     */
+    @Transactional
+    public void softDeleteEmotion(User user, Long emotionId) {
+        Emotion emotion = emotionRepository.findById(emotionId)
+                .orElseThrow(() -> new IllegalArgumentException("감정정보가 존재하지 않습니다."));
+
+        if (!emotion.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("본인의 감정정보만 삭제할 수 있습니다.");
+        }
+
+        emotion.markAsDeleted();  // isDeleted = true 로 변경
     }
 
 }

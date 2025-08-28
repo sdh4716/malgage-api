@@ -34,9 +34,8 @@ public class CategoryQueryRepository {
         return queryFactory
                 .selectFrom(category)
                 .where(
-                        // 기본 카테고리는 모든 사용자가 볼 수 있음
+                        category.isDeleted.isFalse(),   // ✅ 삭제되지 않은 카테고리만
                         category.scope.eq(CategoryScope.DEFAULT)
-                                // 또는 사용자의 커스텀 카테고리
                                 .or(category.scope.eq(CategoryScope.CUSTOM)
                                         .and(category.user.id.eq(userId)))
                 )
@@ -65,14 +64,14 @@ public class CategoryQueryRepository {
                         Expressions.nullExpression(Long.class),
                         category.createdAt,
                         category.updatedAt,
-                        visibility.isVisible.coalesce(true) // null일 때 기본값 true
+                        visibility.isVisible.coalesce(true)
                 ))
                 .from(category)
                 .leftJoin(visibility)
-                // ✅ 엔티티 참조 대신 FK 컬럼으로 직접 조인 (지연 로딩 방지)
-                .on(visibility.category.id.eq(category.id)    // category 엔티티 접근 대신 id 사용
-                        .and(visibility.user.id.eq(user.getId()))) // user 엔티티 접근 대신 id 사용
+                .on(visibility.category.id.eq(category.id)
+                        .and(visibility.user.id.eq(user.getId())))
                 .where(
+                        category.isDeleted.isFalse(),   // ✅ 추가
                         category.scope.eq(CategoryScope.DEFAULT),
                         type != null ? category.type.eq(type) : null
                 )
@@ -92,22 +91,22 @@ public class CategoryQueryRepository {
                         category.sortOrder,
                         category.scope,
                         category.iconName,
-                        Expressions.FALSE, // isDefault = false (커스텀이므로)
-                        Expressions.TRUE,  // isCustom = true
-                        Expressions.constant(user.getId()), // ✅ 상수로 user ID 직접 설정
+                        Expressions.FALSE,
+                        Expressions.TRUE,
+                        Expressions.constant(user.getId()),
                         category.createdAt,
                         category.updatedAt,
-                        visibility.isVisible.coalesce(true) // 기본값 true
+                        visibility.isVisible.coalesce(true)
                 ))
                 .from(category)
                 .leftJoin(visibility)
                 .on(visibility.category.id.eq(category.id)
                         .and(visibility.user.id.eq(user.getId())))
                 .where(
+                        category.isDeleted.isFalse(),   // ✅ 추가
                         category.scope.eq(CategoryScope.CUSTOM),
                         type != null ? category.type.eq(type) : null,
-                        // ✅ FK 컬럼으로 직접 필터링 (Category 테이블의 user_id 컬럼)
-                        category.user.id.eq(user.getId()) // 이건 단순 where 조건이라 문제없음
+                        category.user.id.eq(user.getId())
                 )
                 .orderBy(category.type.asc(), category.sortOrder.asc())
                 .fetch();
@@ -130,19 +129,21 @@ public class CategoryQueryRepository {
                         category.user.id,
                         category.createdAt,
                         category.updatedAt,
-                        visibility.isVisible.coalesce(true)  // 가시성 설정이 없으면 true 처리
+                        visibility.isVisible.coalesce(true)
                 ))
                 .from(category)
                 .leftJoin(visibility)
                 .on(visibility.category.id.eq(category.id)
                         .and(visibility.user.id.eq(user.getId())))
                 .where(
+                        category.isDeleted.isFalse(),   // ✅ 추가
                         category.type.eq(type),
-                        visibility.isVisible.isNull().or(visibility.isVisible.isTrue())  // ← 핵심 조건
+                        visibility.isVisible.isNull().or(visibility.isVisible.isTrue())
                 )
                 .orderBy(category.sortOrder.asc())
                 .fetch();
     }
+
 
 
 

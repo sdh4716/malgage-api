@@ -53,6 +53,9 @@ public class Category extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
+
     /**
      * 이 카테고리에 대한 사용자별 가시성 설정들
      */
@@ -185,6 +188,10 @@ public class Category extends BaseTimeEntity {
         this.iconName = iconName != null && !iconName.trim().isEmpty() ? iconName.trim() : null;
     }
 
+    public void markAsDeleted() {
+        this.isDeleted = true;
+    }
+
     // ===== 유효성 검증 메서드 =====
 
     private void validateCustomCategory() {
@@ -232,6 +239,7 @@ public class Category extends BaseTimeEntity {
         }
     }
 
+
     // ===== Object 메서드 오버라이드 =====
 
     @Override
@@ -252,4 +260,5 @@ public class Category extends BaseTimeEntity {
         return String.format("Category{id=%d, name='%s', type=%s, scope=%s, iconName='%s'}",
                 id, name, type, scope, iconName);
     }
+
 }

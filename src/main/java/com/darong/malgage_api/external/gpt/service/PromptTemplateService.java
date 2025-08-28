@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,8 +33,10 @@ public class PromptTemplateService {
             String categoryJson = objectMapper.writeValueAsString(getAllVisibleCategories(user));
             String emotionJson = objectMapper.writeValueAsString(getAllVisibleEmotions(user));
             String paymentMethodsJson = objectMapper.writeValueAsString(getPaymentMethods());
+            String baseDateTime = LocalDateTime.now()
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
 
-            return PromptTemplates.systemPrompt(categoryJson, emotionJson, paymentMethodsJson);
+            return PromptTemplates.systemPrompt(categoryJson, emotionJson, paymentMethodsJson, baseDateTime);
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException("프롬프트 JSON 직렬화 실패", e);

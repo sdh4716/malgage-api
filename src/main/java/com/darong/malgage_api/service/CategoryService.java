@@ -103,22 +103,22 @@ public class CategoryService {
         visibilityRepository.save(visibility);
     }
 
+    /**
+     * Custom 카테고리 삭제
+     * 사용자가 record에서 해당 카테고리를 사용했을 수도 있기 때문에
+     * 실제 삭제가 아닌 soft delete
+     */
     @Transactional
-    public void deleteCustomCategory(User user, Long categoryId) {
+    public void softDeleteCategory(User user, Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new NotFoundException("카테고리를 찾을 수 없습니다."));
-
-        if (!category.isCustomCategory()) {
-            throw new IllegalArgumentException("사용자 정의 카테고리만 삭제할 수 있습니다.");
-        }
+                .orElseThrow(() -> new IllegalArgumentException("카테고리가 존재하지 않습니다."));
 
         if (!category.getUser().getId().equals(user.getId())) {
             throw new AccessDeniedException("본인의 카테고리만 삭제할 수 있습니다.");
         }
 
-        categoryRepository.delete(category);
+        category.markAsDeleted();  // isDeleted = true 로 변경
     }
-
 
 
 }

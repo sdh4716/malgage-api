@@ -55,6 +55,9 @@ public class Emotion extends BaseTimeEntity {
     @OneToMany(mappedBy = "emotion", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<UserEmotionVisibility> visibilitySettings = new ArrayList<>();
 
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
+
     // ===== private 생성자 =====
     private Emotion(String name, String iconName, Integer sortOrder, EmotionScope scope, User user) {
         validateName(name);
@@ -184,6 +187,10 @@ public class Emotion extends BaseTimeEntity {
     public void updateIcon(String iconName) {
         validateIconName(iconName);
         this.iconName = iconName != null && !iconName.trim().isEmpty() ? iconName.trim() : null;
+    }
+
+    public void markAsDeleted() {
+        this.isDeleted = true;
     }
 
     // ===== 유효성 검증 메서드 =====
