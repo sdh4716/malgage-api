@@ -8,12 +8,13 @@ import com.darong.malgage_api.domain.user.repository.UserRepository;
 import com.darong.malgage_api.global.jwt.JwtProvider;
 import com.google.api.client.googleapis.auth.oauth2.*;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory; // ✅ JacksonFactory → GsonFactory로 변경
+import com.google.api.client.json.gson.GsonFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,13 @@ public class GoogleLoginService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtProvider jwtProvider;
+
+    // ✅ 허용할 Client ID 목록 (iOS / Android / Web)
+    private static final List<String> CLIENT_IDS = Arrays.asList(
+            "837504135906-1d05gslosi87e06nu6iksr8lbrkf6lfr.apps.googleusercontent.com", // iOS
+            "837504135906-1hpkoj42u8h9gpb9a5l7792hsrp9jae9.apps.googleusercontent.com", // Android
+            "837504135906-5jfc0rk2r5hout3mut32jh4qj421eiob.apps.googleusercontent.com"   // Web
+    );
 
     @Transactional
     public TokenResponse login(String idTokenString) {
@@ -57,11 +65,13 @@ public class GoogleLoginService {
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
                     new NetHttpTransport(),
                     GsonFactory.getDefaultInstance()
-            ).setAudience(Collections.singletonList("837504135906-1d05gslosi87e06nu6iksr8lbrkf6lfr.apps.googleusercontent.com"))
+            ).setAudience(CLIENT_IDS) // ✅ 여러 Client ID 허용
                     .build();
 
             GoogleIdToken idToken = verifier.verify(idTokenString);
-            if (idToken == null) throw new IllegalArgumentException("유효하지 않은 Google ID Token");
+            if (idToken == null) {
+                throw new IllegalArgumentException("유효하지 않은 Google ID Token");
+            }
 
             return idToken.getPayload();
 
