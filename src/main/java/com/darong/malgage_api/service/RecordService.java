@@ -133,10 +133,14 @@ public class RecordService {
     public void deleteRecord(User user, Long recordId) {
         Record record = recordRepository.findById(recordId)
                 .orElseThrow(() -> new NotFoundException("기록을 찾을 수 없습니다."));
-        
 
         if (!record.getUser().getId().equals(user.getId())) {
             throw new AccessDeniedException("본인의 기록만 삭제할 수 있습니다.");
+        }
+
+        // 기록이 할부일 경우 할부 스케쥴 먼저 삭제
+        if (record.getIsInstallment()) {
+            installmentScheduleRepository.deleteByRecord(record);
         }
 
         recordRepository.delete(record);
